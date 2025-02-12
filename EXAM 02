@@ -1,1 +1,27 @@
+STR CAP
+keep all the spaces
+if its the first char or prev was a space/tab then UPP
+if not the first or space/tab and is UPP then make LOW
+otherwise write
+
+
+LASTWORD
+go to the end of string and work backwards
+go back all spaces and then all continue going back until next space
+start loop from there and write until space
+
+
+CAMEL TO SNAKE
+search for UPP letters
+write '_' 
+write LC letters
+
+SNAKE TO CAMEL
+loop through until '_'
+move to next char and make UPP
+otherwise just print
+
+EPUR and EXPAND
+use a flag to know when there are spaces
+when spaces have passed check flag to see if space needs to be written
 

@@ -1,3 +1,12 @@
+STR CMP
+if s1 == s2
+continue, else
+use return unsigned char - unsigned char
+
+STR DUP
+same as copy STRCPY but with malloc
+find length
+
 STR CAP
 keep all the spaces
 if its the first char or prev was a space/tab then UPP
@@ -24,4 +33,8 @@ otherwise just print
 EPUR and EXPAND
 use a flag to know when there are spaces
 when spaces have passed check flag to see if space needs to be written
+
+ALPHA MIRROR
+for UPP use (A - s1[i]) + Z
+
 

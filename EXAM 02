@@ -37,4 +37,19 @@ when spaces have passed check flag to see if space needs to be written
 ALPHA MIRROR
 for UPP use (A - s1[i]) + Z
 
+ROT
+keep it simple, make a specific rule for Z, z.
+rest just + 1.
+
+HIDENP
+check both strings for '\0'
+if s1 = s2 move on in s1, otherwise move on in s2
+if s1 reaches '\0' it means all letters werew found write 1, else 0
+
+INTER
+remember if(checkdbls(s1, s1[i], index)) == 1
+in checkdbls use (i < index) if s1 = c, return 0, else 1
+
+
+
 

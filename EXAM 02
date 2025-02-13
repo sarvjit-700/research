@@ -50,6 +50,23 @@ INTER
 remember if(checkdbls(s1, s1[i], index)) == 1
 in checkdbls use (i < index) if s1 = c, return 0, else 1
 
+UNION
+join both strings s1, s2 into s1, then do checkdbls
+
+flood fill / split
+
+STRREV
+only allowed to use the same string, use a temp char c
+while (end > start)
+
+REV_WSTR
+use i find length of whole string and set end point
+in the loop while i is not 0 
+ from now always set end based on i is 0 or in spaces
+ set start of word when not a space
+loop start to end and print
+if i is not -1 then print space
+
 
 
 

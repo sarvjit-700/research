@@ -1,3 +1,8 @@
+PUTNBR
+easy - anything under 9 use write(1, &"0123456789"[i % 10], 1)
+anything over 9 needs to be putnbr(i / 10)
+harder - look for 
+
 STR CMP
 if s1 == s2
 continue, else
@@ -66,6 +71,24 @@ in the loop while i is not 0
  set start of word when not a space
 loop start to end and print
 if i is not -1 then print space
+
+RSTR_CAP
+print all spaces, if i+1 is a space or '\0', UPP current s1[i]
+otherwise check if any letters are UPP And make them LOW
+
+FT ATOI BASE
+same as ATOI but have to calc accroding to the base and HEX
+check each char in string and convert. If 0-9 same but make int usingn  c - 0
+a -f and A - F, then c - 'A' + 10 give correct letter.
+
+FT ITOA
+convert int to string.
+need unsigend int variable for neg numnbers
+need to count how many digits, if there is a minus add one place first,
+use divide by 10 to count digits. 
+Malloc with number of digits then 
+if the int is negative add '-' to the start of string and make int positive and cont.
+add numbers to string backwards by MOD by 10 then divide by 10
 
 
 

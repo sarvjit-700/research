@@ -90,6 +90,13 @@ Malloc with number of digits then
 if the int is negative add '-' to the start of string and make int positive and cont.
 add numbers to string backwards by MOD by 10 then divide by 10
 
+POWER OF 2
+divide n by 2 until n%2 is not 0 - should be 1 to return 1
 
+LCM
+use fizzbuzz method, don't forget if one input is 0 return 0
 
+PGCD
+Use simple atoi to get ints
+use the smallest and find out the mod == 0 see if the same mod work with other number
 

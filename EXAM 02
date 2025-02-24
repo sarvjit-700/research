@@ -100,3 +100,17 @@ PGCD
 Use simple atoi to get ints
 use the smallest and find out the mod == 0 see if the same mod work with other number
 
+PRIME ADD SUM
+convert using SIMPLE ATOI, write function for sqrt. Check if prime number :
+<= 1 returns 0, n==2 returns 1, while sqrt > 1 if num mod sqrt == 0 then number is not a prime.
+sqrt-- if any answer is not 0 then prime. loop down from the num until sum of all primes
+use putnbr to display answer.
+
+FPRIME
+nbr % 2 == 0 it divides without remainders print 2 * and loop again with nbr /2 until 
+there are remainders. then increase mod (x=3) by one and keep going until x is the same as 
+nbr. ignore any multiples of 2. eg. 4. i.e x % 2 == 0 ignore and move on x++
+
+
+
+

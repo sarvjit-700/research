@@ -1,3 +1,5 @@
+limits.h for INT_MIN / INT_MAX
+
 PUTNBR
 easy - anything under 9 use write(1, &"0123456789"[i % 10], 1)
 anything over 9 needs to be putnbr(i / 10)
@@ -111,6 +113,9 @@ nbr % 2 == 0 it divides without remainders print 2 * and loop again with nbr /2 
 there are remainders. then increase mod (x=3) by one and keep going until x is the same as 
 nbr. ignore any multiples of 2. eg. 4. i.e x % 2 == 0 ignore and move on x++
 
-
+FT_RANGE
+3 cases start == end, start > end, start < end
+use start - end to count malloc space, for ints don't need '\0' but still need + 1 space for 0
+-2, -1, 0, 1, 2 needs 5 spaces but 2 -- 2 = 4 not 5
 
 

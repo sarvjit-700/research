@@ -1,0 +1,6 @@
+SSH
+
+Go to .ssh and create a new key
+ssh-keygen -t rsa -b 4096 -C "ssukhija@student.42prague.com"
+rename file to id_rsa_pub
+open file with text editor copy all and paste in intra

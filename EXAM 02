@@ -118,4 +118,16 @@ FT_RANGE
 use start - end to count malloc space, for ints don't need '\0' but still need + 1 space for 0
 -2, -1, 0, 1, 2 needs 5 spaces but 2 -- 2 = 4 not 5
 
+ROSTRING
+find the length of the whole string. malloc this length, make new str by removing all extra spaces
+add a space after every word. Skip first word from new str and print all, then print first word.
+
+FLOODFILL
+first get a char c = tab[begin.y][begin.x] in 2d array (y,x)
+call flood_helper with all variables
+because recursive, BEGIN always changes, make sure its not more than SIZE and < 0
+check is the character at begin.y begin.x = c then tab[begin.y][begin.x]= 'F'
+move begin
+
+
 

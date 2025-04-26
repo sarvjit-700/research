@@ -1,3 +1,116 @@
+ft_split
+
+#include <unistd.h>//?
+#include <stdlib.h>
+#include <stdio.h>//
+
+int spacetab(char *s, int i)
+{
+    if (s[i] == 32 || (s[i] >= 9 && s[i] <= 13)) // returns 1 if space or tab
+        return (1);
+    return (0);
+}
+
+
+int count_words(char *s)
+{
+    int i;
+    int count;
+
+    i = 0;
+    count = 0;
+    while (s[i] != '\0' && spacetab(s, i) == 1)
+        i++;
+    while (s[i] != '\0')
+    {
+        if (s[i] != '\0' && spacetab(s, i) == 0)
+        {
+            while (s[i] != '\0' && spacetab(s, i) == 0)
+            {
+                i++;
+            }
+            count++;
+        }
+        else
+            i++;        
+    }
+    return (count);
+}
+
+char    *getword(char *s1, char *s2, int len)
+{
+    int i;
+
+    i = 0;
+    while(len > 0)
+    {
+        s1[i] = s2[i];
+        i++;
+        len--;
+    }
+    s1[i] = '\0';
+    return (s1);
+}
+
+
+char    **ft_split(char *str)
+{
+    char **arr;
+    int num;
+    int index;
+    int start;
+    int j;
+    
+    num = 0;
+    index = 0;
+    start = 0;
+    j = 0;
+    if (str == NULL || str[0] == '\0')
+    {   
+        arr = malloc(sizeof(char *));
+        arr[0] = NULL;
+        return (arr);
+    }
+    num = count_words(str);
+    arr = malloc(sizeof(char *) * (num + 1));
+    if (arr == NULL)
+        return NULL;
+    while(str[index] != '\0')
+    {
+        while(str[index] != '\0' && (spacetab(str, index) == 1))
+            index++;
+        start = index;
+        while(str[index] != '\0' && (spacetab(str, index) == 0))
+            index++;
+        if (index > start)
+        {
+            arr[j] = malloc(sizeof(char) * ((index-start) + 1));
+            getword(arr[j], &str[start], index-start);
+            j++;
+        }
+    }
+    arr[j] = NULL;
+    int x = 0;
+    while (arr[x] != NULL) {
+        printf("Word %d: %s\n", x, arr[x]);  // Print each word in arr
+        free(arr[x]);  // Free the word after using it
+        x++;
+    }
+    return (arr);
+}
+
+int main(int argc, char **argv)
+{
+    if (argc < 2)
+    {
+        return (0);
+    }
+    ft_split(argv[1]);
+    return (0);
+}
+
+
+--------------------
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>

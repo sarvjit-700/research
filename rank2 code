@@ -1,0 +1,1287 @@
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// void    ft_putstr(char *str)
+// {
+//     int i;
+
+//     i = 0;
+//     while (str[i] != '\0')
+//     {
+//         write(1, &str[i], 1);
+//         i++;
+//     }
+// }
+
+// int ft_strcmp(char *s1, char *s2)
+// {
+//     int i;
+
+//     i = 0;
+//     while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
+//         i++;
+//     printf("%d\n", ((unsigned char)s1[i] - (unsigned char)s2[i]));
+//     return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+// }
+
+// char    *ft_strcpy(char *s1, char *s2)
+// {
+//     int i;
+
+//     i = 0;
+//     while (s2[i] != '\0')
+//     {
+//         s1[i] = s2[i];
+//         i++;
+//     }
+//     s1[i] = '\0';
+//     printf("%s\n", s1);
+//     return (s1);
+// }
+
+// char    *ft_strdup(char *src)
+// {
+//     char    *dup;
+//     int i;
+
+//     i = 0;
+//     while (src[i] != '\0')
+//         i++;
+//     dup = malloc(sizeof(char)*(i+1));
+//     if (dup == NULL)
+//         return (NULL);
+//     i = 0;
+//     while (src[i] != '\0')
+//     {
+//         dup[i] = src[i];
+//         i++;
+//     }
+//     dup[i] = '\0';
+//     return (dup);
+// }
+
+// void    ulstr(char *s1)
+// {
+//     int i;
+//     char c;
+
+//     i = 0;
+//     while (s1[i] != '\0')
+//     {
+//         if (s1[i] >= 'A' && s1[i] <= 'Z')
+//            c = s1[i] + 32;
+//         else if (s1[i] >= 'a' && s1[i] <= 'z')
+//             c = s1[i] - 32;
+//         else
+//             c = s1[i];
+//         write(1, &c, 1);
+//         i++;
+//     }
+// }
+
+
+// void    strcap(char *s1)
+// {
+//     int i;
+//     char c;
+
+//     i = 0;
+//     while (s1[i] != '\0' && s1[i] <= 32)
+//     {
+//         write(1, &s1[i], 1);
+//         i++;
+//     }
+//     while (s1[i] != '\0')
+//     {
+//         if ((i == 0 || (s1[i-1] == 32 || (s1[i-1] >= 9 && s1[i-1] <= 13))) && (s1[i] >= 'a' && s1[i] <= 'z'))
+//         {
+//             c = s1[i] - 32;
+//             write(1, &c, 1);
+//         }
+//         else if (!(i == 0 || (s1[i-1] == 32 || (s1[i-1] >= 9 && s1[i-1] <= 13))) && (s1[i] >= 'A' && s1[i] <= 'Z'))
+//         {
+//             c = s1[i] + 32;
+//             write(1, &c, 1);
+//         }
+//         else
+//             write(1, &s1[i], 1);
+//         i++;
+//     }
+// }
+
+// void    firstword(char *str)
+// {
+//     int i;
+
+//     i = 0;
+//     while (str[i] != '\0' && str[i] <= 32)
+//         i++;
+//     while (str[i] != '\0' && (str[i] != 32 || (str[i] >= 9 && str[i] <= 13)))
+//     {
+//         write(1, &str[i], 1);
+//         i++;
+//     }
+// }
+
+int ft_strlen(char *str)
+{
+    int i;
+
+    i = 0;
+    while (str[i] != '\0')
+        i++;
+    return (i);
+}
+
+// void    lastword(char *str)
+// {
+//     int end;
+//     int len;
+
+//     len = ft_strlen(str);
+//     len = len -1;
+//     while (str[len] != '\0' && str[len] <= 32)
+//         len--;
+//     end = len;
+//     while (str[len] != 32 && len != 0)
+//         len--;
+//     len++;
+//     while(len <= end)
+//     {
+//         write(1, &str[len], 1);
+//         len++;
+//     }
+// }
+
+
+// void    camel_to_snake(char *s1)
+// {
+//     int i;
+
+//     i = 0;
+//     while (s1[i] != '\0')
+//     {
+//         if (s1[i] >= 'A' && s1[i] <= 'Z')
+//         {
+//             write(1, "_", 1);
+//             s1[i] += 32;
+//             write(1, &s1[i], 1);
+//         }
+//         else
+//             write(1, &s1[i], 1);
+//         i++;
+//     }
+// }
+
+// void snake_to_camel(char *s1)
+// {
+//     int i;
+
+//     i = 0;
+//     while (s1[i] != '\0')
+//     {
+//         if (s1[i] == '_')
+//         {
+//             i++;
+//             s1[i] -= 32;
+//             write(1, &s1[i], 1);
+//         }
+//         else
+//             write(1, &s1[i], 1);
+//         i++;
+//     }
+// }
+
+// void    epur(char *s1)
+// {
+//     int i;
+//     int end;
+
+//     i = 0;
+//     end = ft_strlen(s1);
+//     while (s1[i] != '\0' && s1[i] <= 32)
+//         i++;
+//     while (s1[end - 1] <= 32 && (end != 0))
+//         end--;
+//     while (s1[i] != '\0' && (i < end))
+//     {
+//         if (s1[i] > 32)
+//         {
+//             write(1, &s1[i], 1);
+//         }
+//         else
+//         {
+//             while (s1[i] != '\0' && s1[i] <= 32)
+//                 i++;
+//             write(1, " ", 1);
+//             i--;
+//         }
+//         i++;
+//     }
+// }
+
+// void    expand(char *s1)
+// {
+//     int flag;
+//     int i;
+
+//     i = 0;
+//     flag = 0;
+//     while (s1[i] != '\0' && s1[i] <= 32)
+//         i++;
+//     while (s1[i] != '\0')
+//     {
+//         if (s1[i] <= 32)
+//             flag = 1;
+//         else
+//         {
+//             if (flag == 1)
+//             {
+//                 write(1, "   ", 3);
+//                 flag = 0;
+//             }
+//             write(1, &s1[i], 1);
+//         }
+//         i++;
+//     }
+// }
+
+// void    alphan(char *s1)
+// {
+//     int     i;
+
+//     i = 0;
+//     while (s1[i] != '\0')
+//     {
+//         if (s1[i] >= 'A' && s1[i] <= 'Z')
+//             s1[i] = (65 - s1[i]) + 90;
+//         else if (s1[i] >= 'a' && s1[i] <= 'm')
+//             s1[i] = 122 - (s1[i] - 97);
+//         else if (s1[i] >= 'n' && s1[i] <= 'z')
+//             s1[i] = 97 + (122 - s1[i]);
+//         write(1, &s1[i], 1);
+//         i++;
+//     }
+// }
+
+// void    sr(char *s1, char s, char r)
+// {
+//     int     i;
+
+//     i = 0;
+//     while (s1[i] != '\0')
+//     {
+//         if (s1[i] == s)
+//             write(1, &r, 1);
+//         else
+//             write(1, &s1[i], 1);
+//         i++;
+//     }
+// }
+
+// void    rot(char *s1)
+// {
+//     int i;
+
+//     i = 0;
+//     while (s1[i] != '\0')
+//     {
+//         if ((s1[i] >= 'A' && s1[i] <= 'Z') || (s1[i] >= 'a' && s1[i] <= 'z'))
+//         {
+//             if (s1[i] == 'Z')
+//                 s1[i] = 'A';
+//             else if (s1[i] == 'z')
+//                 s1[i] = 'a';
+//             else
+//                 s1[i] = s1[i] + 1;
+//             write(1, &s1[i], 1);
+//         }
+//         i++;
+//     }
+// }
+
+// void    rotten(char *s1)
+// {
+//     int     i;
+
+//     i = 0;
+//     while (s1[i] != '\0')
+//     {
+//         if (s1[i] >= 'A' && s1[i] <= 'M')
+//             s1[i] = s1[i] + 13;
+//         else if (s1[i] >= 'N' && s1[i] <= 'Z')
+//             s1[i] = s1[i] - 13;
+//         else if (s1[i] >= 'a' && s1[i] <= 'm')
+//             s1[i] = s1[i] + 13;
+//         else if (s1[i] >= 'n' && s1[i] <= 'z')
+//             s1[i] = s1[i] - 13;
+//         write(1, &s1[i], 1);
+//         i++;
+//     }
+// }
+
+// size_t  ft_strspn(const char *s, const char *accept)
+// {
+//     size_t i;
+
+//     i = 0;
+//     while ((s[i] != '\0' || accept[i] != '\0') && (s[i] == accept[i]))
+//     {
+//         i++;
+//     }
+//     //printf("%ld\n", i);
+//     return (i);
+// }
+// int checkdbls(char *s1, char c, int index)
+// {
+//     int i;
+
+//     i = 0;
+//     while (i < index)
+//     {
+//         if (s1[i] == c)
+//         {
+//             return (0);
+//         }
+//         i++;
+//     }
+//     return (1);
+// }
+
+// void    unionx(char *s1, char *s2)
+// {
+//     int i;
+//     int j;
+
+//     i = 0;
+//     j = 0;
+//     while(s1[i] != '\0')
+//         i++;
+//     while(s2[j] != '\0')
+//         s1[i++] = s2[j++];
+//     s1[i] = '\0';
+//     i = 0;
+//     while (s1[i] != '\0')
+//     {
+//         if (checkdbls(s1, s1[i], i) == 1)
+//         {
+//             write(1, &s1[i], 1);
+//         }
+//         i++;
+//     }
+// }
+
+// char    *ft_strrev(char *str)
+// {
+//     char    c;
+//     int  i;
+//     int  j;
+
+//     i = 0;
+//     j = 0;
+    
+//     while (str[i] != '\0')
+//         i++;
+//     i--;
+//     while (i > j)
+//     {
+//         c = str[j];
+//         str[j] = str[i];
+//         str[i] = c;
+//         i--;
+//         j++;
+//     }
+//     printf("%s\n", str);
+//     return (str);
+// }
+
+
+// void    rev_print(char *s1)
+// {
+//     int i;
+
+//     i = 0;
+//     while (s1[i] != '\0')
+//         i++;
+//     i--;
+//     while (i >= 0)
+//     {
+//         write(1, &s1[i], 1);
+//         i--;
+//     }
+// }
+
+// void    rev_wstr(char *s1)
+// {
+//     int i;
+//     int endword;
+//     int startword;
+
+//     i = 0;
+//     endword = 0;
+//     startword = 0;
+//     while (s1[i] != '\0')
+//         i++;
+//     i--;
+//     endword = i;
+
+//     while (i >= 0)
+//     {
+//         while (i >= 0 && (s1[i] <= 32)) //if s1[i] not space or 0
+//             i--;
+//         endword = i;
+        
+//         while (i >= 0 && !(s1[i] <= 32)) //while i is not zero and not space, to find start of the word
+//             i--;
+//         startword = i+1;
+//        // printf("start :%d end %d\n", startword, endword);
+//         while (startword <= endword)
+//         {
+//             write(1, &s1[startword], 1);
+//             startword++;
+//         }
+//         if (i != -1)
+//             write(1, " ", 1);
+//     }    
+// }
+
+// void    rotstring(char *s1)
+// {
+//     int i;
+//     int flag;
+//     int fword;
+//     int eword;
+    
+//     i = 0;
+//     flag = 0;
+
+//     while (s1[i] != '\0' && s1[i] == 32)
+//         i++;
+//     fword = i; //start of the first word
+//     while (s1[i] != '\0' && s1[i] != 32)
+//         i++;
+//     eword = i; //word ends either '\0' or space
+//     while (s1[i] != '\0' && s1[i] == 32)
+//         i++;
+//     while (s1[i] != '\0')
+//     {
+//         if (s1[i] == 32)
+//         {
+//             flag = 1;
+//         }
+//         if (s1[i] != 32)
+//         {
+//             if (flag == 1)
+//             {
+//                 write(1, " ", 1);
+//                 flag = 0;
+//             }
+//             write(1, &s1[i], 1);
+//         }
+//         i++;
+//     }
+//     write(1, " ", 1);
+//     while (fword < eword)
+//     {
+//         write(1, &s1[fword], 1);
+//         fword++;
+//     }
+// }
+
+// void    changeCase(char *s1, int i)
+// {
+//     if (s1[i] >= 'a' && s1[i] <= 'z') //take care of the last letter
+//     {
+//         s1[i] = s1[i] - 32;
+//         write(1, &s1[i], 1);
+//     }
+//     else
+//         write(1, &s1[i], 1);
+// }
+
+// void    rstr_cap(char *s1)
+// {
+//     int i;
+
+//     i = 0;
+//     while (s1[i] != '\0' && s1[i] == 32) // print first spaces
+//     {
+//         write(1, &s1[i], 1);
+//         i++;
+//     }
+//     while (s1[i] != '\0')
+//     {
+//         if (s1[i+1] == 32 || s1[i+1] == '\0')
+//             changeCase(s1, i);
+//         else
+//         {
+//             if (s1[i] >= 'A' && s1[i] <= 'Z')
+//             {
+//                 s1[i] = s1[i] + 32;
+//                 write(1, &s1[i], 1);
+//             }
+//             else
+//                 write(1, &s1[i], 1);
+//         }
+//         i++;
+//     }write(1, "\n", 1);
+// }
+
+
+// void    ft_putnbr(int i)
+// {
+//     if (i > 9)
+//         ft_putnbr(i / 10);
+//     write(1, &"0123456789"[i % 10], 1);
+// }
+
+// void    ft_putnbrhard(int nb)
+// {
+//     unsigned int    nbr;
+//     nbr = nb;
+//     if (nbr < 0)
+//     {
+//         write(1, "-", 1);
+//         nbr *= -1;
+//     }
+//     if (nbr > 9);
+//         ft_putnbrhard(nbr / 10);
+//     else
+//         write(1, &"0123456789"[nbr %10], 1);
+// }
+
+// int main()
+// {
+//     int i;
+
+//     i = 1;
+//     while (i <= 100)
+//     {
+//         if (i % 3 == 0 && i % 5 == 0)
+//         {
+//             write(1, "fizzbuzz", 8);
+//         }
+//         else if (i % 3 == 0)
+//             write(1, "fizz", 4);
+//         else if (i % 5 == 0)
+//             write(1, "buzz", 4);
+//         else
+//         {
+//             ft_putnbr(i);
+//         }
+//         write(1, "\n", 1);
+//         i++;
+//     }
+// }
+
+// int main(int argc, char **argv)
+// {
+//     int i;
+//     char c;
+//     i = 1;
+//     if (argc < 2)
+//     {
+//         write(1, "\n", 1);
+//         return (0);
+//     }
+//     while (argv[i] != NULL)
+//         i++;
+//     i--;
+//     c = (char)i +48;
+//     write(1, &c, 1);
+//     // else if (argv[2][1] != '\0' || argv[3][1] != '\0')
+//     // {
+//     //     write(1, "\n", 1);
+//     //     return (0);
+//     // }
+//     // else
+//     //     sr(argv[1], argv[2][0], argv[3][0]);
+//     //    rstr_cap(argv[1]);
+//     write(1, "\n", 1);
+//     return (0);
+// }
+
+// int ft_atoi(const char *str)
+// {
+//     int sign;
+//     int nb;
+//     int result;
+
+//     nb = 0;
+//     sign = 1;
+//     result = 0;
+//     while (str[nb] <= 32)
+//     {
+//         printf("res now : %d\n", result);
+//         nb++;
+//     }
+//     if (str[nb] == '+' || str[nb] == '-')
+//     {
+//         if (str[nb] == '-')
+//         {    
+//             printf("res now : %d\n", result);
+//             sign *= -1;
+//             nb++;
+//         }
+//     }
+//     while (str[nb] >= '0' && str[nb] <= '9')
+//     {
+//         printf("res now : %d\n", result);
+//         result = (result * 10);
+//         result = result + (str[nb] - 48);
+//         nb++;
+//     }
+//     return (result * sign);  
+// }
+
+// int changec(char c)
+// {
+//     if (c >= '0' && c <= '9')
+//         return (c - 48);
+//     else if (c >= 'a' && c <= 'z')
+//         return (c - 'a' + 10);
+//     else if (c >= 'A' && c <= 'Z')
+//         return (c - 'A' + 10);
+//     else
+//         return (-1);
+//     return (0);
+// }
+
+// int	ft_atoi_base(const char *str, int str_base)
+// {
+//     int i;
+//     int sign;
+//     int result;
+//     int cc;
+
+//     i = 0;
+//     sign = 1;
+//     while (str[i] == 32 || (str[i] >=9 && str[i] <= 13))
+//         i++;
+//     if (str[i] == '-' || str[i] == '+')
+//     {
+//         if (str[i] == '-')
+//             sign = -1;
+//         i++;
+//     }
+//     result = 0;
+//     cc = 0;
+//     while (str[i] != '\0')
+//     {
+//         cc = changec(str[i]);
+//         if (cc == -1 || cc >= str_base)
+//             break ;
+//         result = result *str_base + cc;
+//         i++;
+//     }
+//     return (result * sign);
+// }
+
+// int puthex(int n)
+// {
+//     if (n >= 16)
+//         puthex(n / 16);
+//     write(1, &"0123456789abcdef"[n % 16], 1);
+//     return (0);
+// }
+
+// int ffatoi(const char *str)
+// {
+//     int i;
+//     int result;
+//     int sign;
+
+//     sign = 1;
+//     i = 0;
+//     result = 0;
+
+//     while (str[i] <= 32)
+//         i++;
+//     if (str[i] == '-' || str[i] == '+')
+//     {
+//         if (str[i] == '-')
+//         {
+//             sign = -1;
+//             i++;
+//         }
+//     }
+//     while (str[i] >= '0' && str[i] <= '9')
+//     {
+//         result = result * 10 + (str[i] - 48);
+//         i++;
+//     }
+//     return (result * sign);
+// }
+
+// int num_len(int n)
+// {
+//     int count;
+
+//     count = 0;
+//     if (n < 0)
+//         count++;
+//     while (n != 0)
+//     {
+//         n = n / 10;
+//         count++;
+//     }
+//     return (count);
+// }
+
+// char	*ft_itoa(int nbr)
+// {
+//     char *num;
+//     unsigned int i;
+//     unsigned int unbr;
+    
+//     num = malloc(sizeof(char) * (num_len(nbr) + 1));
+//     if (num == NULL)
+//         return (NULL);
+//     if (nbr == 0)
+//     {
+//         num[0] = '\0';
+//         return (num);
+//     }
+//     if (nbr < 0)
+//     {
+//         num[0] = '-';
+//         printf("here is %c\n", num[0]);
+//         unbr = nbr * -1;
+//         printf("nbr now %d\n", unbr);
+//     }
+//     num[num_len(nbr)+1] = '\0';
+//     i = num_len(nbr) - 1;
+//     while (unbr != 0)
+//     {
+//         num[i] = (unbr % 10) + 48;
+//         unbr = unbr / 10;
+//         i--;
+//     }
+//     return (num);
+// }
+
+// int main(void)
+// {
+//     char *str;
+
+//     // Test with the maximum positive integer
+//     str = ft_itoa(2147483647);
+//     printf("%s\n", str);
+//     free(str);
+
+//     // Test with the minimum negative integer
+//     str = ft_itoa(-2147483648);
+//     printf("%s\n", str);
+//     free(str);
+
+//     // Test with zero
+//     str = ft_itoa(0);
+//     printf("%s\n", str);
+//     free(str);
+
+//     // Test with a positive number
+//     str = ft_itoa(12345);
+//     printf("%s\n", str);
+//     free(str);
+
+//     // Test with a negative number
+//     str = ft_itoa(-12345);
+//     printf("%s\n", str);
+//     free(str);
+
+//     return 0;
+// }
+
+// int	    is_power_of_2(unsigned int n)
+// {
+
+//     while (n % 2 == 0)
+//     {
+//             n = n / 2;
+//     }
+//     if (n == 1)
+//         write(1, "1", 1);
+//     else
+//         write(1, "0", 1);
+//     return (0);
+// }
+
+// unsigned int    lcm(unsigned int a, unsigned int b)
+// {
+//     int x;
+
+//     x = 1;
+//     while (!(x % a == 0 && x % b == 0))
+//     {
+//         x = x + 1;
+//         //printf("x : %d\n", x);
+//     }
+//     printf("x : %d\n", x);
+//     return (x);
+// }
+
+// int		max(int* tab, unsigned int len)
+// {
+//     int keep;
+//     int i;
+
+//     i = 0;
+//     keep = 0;
+//     if (tab == NULL || len == 0)
+//         return (0);
+//     while (len != 0)
+//     {
+//         if (tab[i] > keep)
+//         {
+//             keep = tab[i];
+//         }
+//         len--;
+//         i++;
+//     }
+//     return (keep);
+// }
+
+
+
+// int pgcd(int a, int b)
+// {
+//     int n;
+
+//     n = b -1;
+//     while (n != 0)
+//     {
+//         if (b % n == 0)
+//         {
+//             if (a % n == 0)
+//             {
+//                 printf("%d\n", n);
+//                 return (n);
+//             }
+//         }
+//         n--;
+//     }
+//     return (0);
+// }
+
+void    putnbr(int n)
+{
+    if (n > 9)
+    {
+        putnbr(n / 10);
+    }
+    write(1, &"0123456789"[n % 10], 1);
+}
+
+// void tab_mult(int n)
+// {
+//     int x;
+//     int res;
+
+//     x = 1;
+//     res = 0;
+//     while (x <= 9)
+//     {
+//         putnbr(x);
+//         write(1, " x ", 3);
+//         putnbr(n);
+//         write(1, " = ", 3);
+//         res = x*n;
+//         putnbr(res);
+//        // printf("\nx : %d, n : %d res : %d\n", x, n, res);
+//         write(1, "\n", 1);
+//         x++;
+//     }
+// }
+// void doop(unsigned int x, unsigned int y, char c)
+// {
+//     if (c == '+')
+//     {
+//         printf("%d\n", x + y);
+//     }
+//     if (c == '-')
+//     {
+//         printf("%d\n", x - y);
+//     }
+//     if (c == '/')
+//     {
+//         printf("%d\n", x / y);
+//     }
+//     if (c == '*')
+//     {
+//         printf("%d\n", x * y);
+//     }
+// }
+int simpatoi(char *str)
+{
+    int     i;
+    int res;
+
+    i = 0;
+    res = 0;
+    while (str[i] != '\0')
+    {
+        if (str[i] >= '0' && str[i] <= '9')
+        {
+            res = (res * 10) + (str[i] - 48);
+        }
+        i++;
+    }
+    return (res);
+}
+
+int sqrtnum(int sq)
+{
+    int sqrt;
+    int y;
+
+    sqrt = 0;
+    y = sqrt * sqrt;
+    while (y <= sq)
+    {
+        if (y == sq)
+            return (sqrt);
+        sqrt++;
+        y = sqrt * sqrt;
+    }
+    return (sqrt);
+}
+
+// int   primeadd(int n)
+// {
+//     int sqrt;
+
+//     if (n <= 1)
+//         return (0);
+//     if (n == 2)
+//         return (1);
+//     if (n % 2 == 0)
+//         return (0); 
+//     sqrt = sqrtnum(n);
+//     while (sqrt > 1)
+//     {
+//         if (n % sqrt == 0)
+//             return (0);
+//         sqrt--;
+//     }
+//     return (n);
+// }
+
+// void fprime(int nbr)
+// {
+//     int x;
+
+//     if (nbr <= 1)
+//         write(1, "1", 1);
+//     if (nbr == 2)
+//         write(1, "2", 1);
+//     while (nbr % 2 == 0) // divides without remainders
+//     {
+//         write(1, "2*", 2);
+//         nbr = nbr / 2;
+//     }
+//     x = 3;
+//     while (x != nbr)
+//     {
+//         while (nbr % x != 0) // divides with remainders
+//         {
+//             x++;
+//         }
+//         if (nbr == x)
+//             break ;
+//         putnbr(x);
+//         nbr = nbr / x;
+//         write(1, "*", 1);
+//         if (x % 2 == 0)
+//             x++;
+//     }
+//     putnbr(x);
+// }
+#include <limits.h>
+
+int main()
+{
+    int num;
+
+    num = INT_MIN;
+    printf("%d\n %d\n", num, INT_MIN);
+    return (0);
+}
+
+// int     *ft_range(int start, int end)
+// {
+//     int count;
+//     int i;
+//     int *arr;
+
+//     if (start == end)
+//         count = 1;
+//     if (start > end)
+//         count = (start - end) + 1;
+//     if (start < end)
+//         count = (end - start) + 1;
+//     arr = malloc(sizeof(int) * (count));
+//     i = 0;
+//     if (start == end)
+//     {
+//         arr[i] = start;
+//         return (arr);
+//     }
+//     else
+//     {
+//         while (i < count)
+//         {
+//             if (start > end)
+//             {
+//                 arr[i++] = start--;
+//             }
+//             else
+//             {
+//                 arr[i++] = start++;
+//             }
+//         }
+//     }
+//     return (arr);
+// }
+
+int main()
+{
+    int *range;
+    int i, length;
+
+    // Test 1: Start at INT_MIN and end at INT_MIN + 5
+    int start = INT_MIN;
+    int end = INT_MIN + 5;
+    range = ft_range(start, end);
+    if (range)
+    {
+        length = end - start + 1;
+        printf("Range from %d to %d:\n", start, end);
+        for (i = 0; i < length; i++)
+        {
+            printf("%d ", range[i]);
+        }
+        printf("\n");
+        free(range);
+    }
+
+    // Test 2: Start at INT_MAX - 5 and end at INT_MAX
+    start = INT_MAX - 5;
+    end = INT_MAX;
+    range = ft_range(start, end);
+    if (range)
+    {
+        length = end - start + 1;
+        printf("Range from %d to %d:\n", start, end);
+        for (i = 0; i < length; i++)
+        {
+            printf("%d ", range[i]);
+        }
+        printf("\n");
+        free(range);
+    }
+
+    // Test 3: Start at -5 and end at 5
+    start = -5;
+    end = 5;
+    range = ft_range(start, end);
+    if (range)
+    {
+        length = end - start + 1;
+        printf("Range from %d to %d:\n", start, end);
+        for (i = 0; i < length; i++)
+        {
+            printf("%d ", range[i]);
+        }
+        printf("\n");
+        free(range);
+    }
+
+    return 0;
+}
+
+// int main()
+// {
+//     //int *array;
+//     //int i;
+
+//     //i = 0;
+//     //array = 
+//     ft_range(1, 3);
+//     // while(array)
+//     // {
+//     //     printf("n = %d\n", array[i]);
+//     //     i++;
+//     // }
+//     return (0);
+// }
+
+// int main(int argc, char **argv)
+// {
+//     int i;
+//     int sumi;
+
+//     if (argc != 2)
+//     {
+//         write(1, "\n", 1);
+//         return (0);
+//     }
+//     i = 0;
+//     i = simpatoi(argv[1]);
+//     sumi = 0;
+//     while (i != 0)
+//     {
+//         sumi = sumi + primeadd(i);
+//         i--;
+//     }
+//     sumi++;
+//     putnbr(sumi);
+//     write(1, "\n", 1);
+
+//     return (0);
+// }
+/*
+#include <stdlib.h>
+#include <unistd.h>
+
+char	*wordcount(char *str, char *new_str)
+{
+	int i;
+	int j;
+	int count;
+
+	count = 0;
+	i = 0;
+	j = 0;
+	while(str[i] <= 32 && str[i] != '\0')
+		i++;
+		
+	while(str[i] != '\0')
+	{
+		while((!(str[i] <= 32)) && str[i] != '\0')
+		{
+			new_str[j] = str[i];
+			i++;
+			j++;
+		}
+		new_str[j] = ' ';
+		j++;
+		count++; 
+		while(str[i] <= 32 && str[i] != '\0')
+			i++;
+	}
+	new_str[j] = '\0';
+	
+	return (new_str);
+}
+
+void	rostring(char *str)
+{
+	//check end of string for spaces
+	int i;
+
+	i = 0;
+	while(!(str[i] <= 32) && str[i] != '\0')
+		i++;
+	i++;
+	while (str[i] != '\0')
+	{
+		write(1, &str[i], 1);
+		i++;
+	}
+	i = 0;
+	while(str[i] != 32)
+	{
+		write(1, &str[i], 1);
+		i++;
+	}
+	write(1, "\n", 1);
+}
+
+
+int	main(int argc, char **argv)
+{
+	int len;
+	char *str;
+	char *new_str;
+
+	len = 0;
+	if (argc < 2)
+	{
+		write(1, "\n", 1);
+		return (0);
+	}
+	str = argv[1];
+	while(str[len] != '\0')
+		len++;
+	new_str = malloc(sizeof(char) * len + 1);
+	if (new_str == NULL)
+		return (1);
+	
+	rostring(wordcount(str, new_str));
+	free(new_str);
+	return (0);
+}
+*/
+
+// int main(int argc, char **argv)
+// {
+//     int x;
+//     int y;
+
+//     x = 0;
+//     y = 0;
+//     if (argc != 2)
+//     {
+//         write(1, "\n", 1);
+//         return (0);
+//     }
+//     x = simpatoi(argv[1]);
+//     y = simpatoi(argv[2]);
+//     if (x > y)
+//         pgcd(x, y);
+//     else
+//         pgcd(y, x);
+//     //printf("x : %d\n and y : %d\n", x, y);
+//     return (0);
+// }
+
+// int main()
+// {
+//     // int array[] = {3, 5, 7, 2, 8, 6, 4, 10};
+//     // unsigned int len = sizeof(array) / sizeof(array[0]);
+    
+//     // int result = max(array, len);
+//     // printf("The maximum value in the array is: %d\n", result);
+//     printf("Mods : 10 mod 9 %d\n 10 mod 8 %d\n 10 mod 7 %d\n 10 mod 6 %d\n 10 mod 5 %d\n 10 mod 4 %d\n 10 mod 3 %d\n 10 mod 2 %d\n 10 mod 1 %d\n ", 10 % 9, 10 % 8, 10 % 7, 10 % 6, 10 % 5, 10 % 4, 10 % 3, 10 % 2, 10 % 1);
+//     printf("Mods : 42 mod 10 %d\n 42 mod 5 %d\n 42 mod 2 %d\n", 42 % 10, 42 % 5, 42 % 2);
+
+   
+// //     int tab[] = {1, 12, 4};
+// //     int res;
+
+// //    // tab = {1, 2, 4};
+// //     res = max(tab, 3);
+// //     printf("res -> %d\n", res);
+// //     //is_power_of_2(64);
+//     write(1, "\n", 1);
+//     return (0);
+// }
+
+
+
+
+
+// int main (void)
+// {
+//     ft_itoa(255);
+//     write(1, "\n", 1);
+    // printf("Result of ft_atoi_base(\"1a\", 16): %d\n", ft_atoi_base("  FFFFFF", 16)); // Should print 431
+    // printf("Result of ft_atoi_base(\"1a\", 10): %d\n", ft_atoi_base("1a", 10));   // Should print 1
+    // printf("Result of ft_atoi_base(\"123\", 2): %d\n", ft_atoi_base("123", 10));   // Should print 1 (stops at '2')
+    // printf("Result of ft_atoi_base(\"-1A\", 16): %d\n", ft_atoi_base("-1A", 16)); // Should print -26
+
+//     return 0;
+// }
+

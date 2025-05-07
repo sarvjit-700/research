@@ -1,0 +1,200 @@
+
+#include <stdlib.h> // needed for malloc 
+#include <stdio.h> // just for printf
+
+// Start by writing the function that counts words and just test this with a simple main
+// to make sure the correct number is returned
+// Simple main: 
+
+/*
+----
+#include <stdio.h>
+
+int main()
+{
+    printf("count : %d\n", count_words("  change this for different   tests   "));
+    return (0);
+}
+----
+*/
+
+/*-- EXPLAIN COUNT WORDS
+int count_words(char *s)  
+starts with int because we want to return the number of words
+
+We start by iterating through the string moving past any spaces/tabs/new lines
+until we find a letter. ASCII for space is 32, tabs and new line are between 9 and 13.
+If the sting has any of these we move on i++;
+
+i is not at the first letter of the string. Now we iterate until the end of the string '\0'
+if in the string we are still inside a word keep going until we are at the end of a string
+or we hit a space/tab/newline. This means we have found our first word so increase the count.
+If we are not in a word, keep going anyway - i++;
+
+return count - the number of words found.
+--*/
+
+int count_words(char *s)
+{   
+    int count;
+    int i;
+
+    count = 0;
+    i = 0;
+    while ((s[i] != '\0') && ((s[i] == 32 || (s[i] >= 9 && s[i] <= 13))))
+        i++;
+    while(s[i] != '\0')
+    {
+        if ((s[i] != '\0') && (!(s[i] == 32 || (s[i] >= 9 && s[i] <= 13))))  //NOTICE THE USE OF !
+        {
+            while ((s[i] != '\0') && (!(s[i] == 32 || (s[i] >= 9 && s[i] <= 13)))) //NOTICE THE USE OF !
+                i++;
+            count++;
+        }
+        else
+            i++;
+    }
+    return (count);
+}
+
+/* -- EXPLAIN COPYWORD (do this AFTER ft_split)
+This function will just copy the word from the string (s2) into the already 
+malloced memory of the array created in ft_split (s1). 
+The char *functionNAME means a pointer to the string will be returned
+There are different ways to do this. I use len,
+just to make sure the right number of characters are copied.
+
+*/
+
+char    *copyword(char *s1, char *s2, int len)  // DON'T FORGET YOU RETURN A STRING SO YOU NEED CHAR AND *function name
+{
+    int i;
+
+    i = 0;
+    while(s2[i] != '\0' && len > 0)
+    {
+        s1[i] = s2[i];
+        i++;
+        len--;
+    }
+    return (s1);
+}
+
+/* -- EXPLAIN FT_SPLIT
+ft_split is easier in the exam because you don't need to worry so much 
+about freeing stuff or errors. Start by remembering that you need **arr
+and len variables. The rest will come to you as you need them. 
+To be safe always initialize int variables with 0.
+
+
+#1 Start by saving the word count in len. Use this to make the right 
+amount of space in the array. 
+NOTICE: because this is a double pointer (**arr) you need sizeof(char *)
+NOTICE: len + 1 to make space for NULL at the end.
+Next Just check if malloc worked properly (arr == NULL)
+
+#2 We want to find the first letter so get past all spaces/tab/new lines
+You can copy this line from count words. But here use str instead of s
+for the string.
+
+#3 Again go through the whole string until '\0'
+#3a Same again because we always want to skip past any spaces/tabs/newlines
+#3b When we get to the first letter of a word - 
+    set START to that point to help remember where it is
+#3c While in the word keeping i++; until we get a space/tab/newline
+    now we know a word begins at START and ends at i
+#3d If (i > start) which it should always be if there is a word
+#3e Make space in the array in the first space (j=0) 
+    NOTICE here its only a string so sizeof(char)
+    The string is length i-start (plus 1 for '\0')
+#3f Now use copyword function to copy the current string into the array
+    Memorise this format (arr[j], &str[start], i-start)
+    increment J so that the next word (if there is one) 
+    is saved into the next space in the array
+#3g The last space in the array needs to be set to NULL
+    And the function needs to return the array.
+
+*/
+
+char    **ft_split(char *str)
+{
+    char **arr;
+    int i;
+    int start;
+    int len;
+    int j;
+
+    i = 0;
+    start = 0;
+    j = 0;
+//#1
+    len = count_words(str);
+    arr = malloc(sizeof(char *) * (len + 1));
+    if (arr == NULL)
+        return (0);
+//#2
+    while ((str[i] != '\0') && ((str[i] == 32 || (str[i] >= 9 && str[i] <= 13))))
+        i++;
+//#3    
+    while(str[i] != '\0')
+    {
+//#3a
+        while ((str[i] != '\0') && ((str[i] == 32 || (str[i] >= 9 && str[i] <= 13))))
+            i++;
+//#3b
+        start = i;
+//#3c
+        while ((str[i] != '\0') && (!(str[i] == 32 || (str[i] >= 9 && str[i] <= 13))))
+            i++;
+//#3d
+        if (i > start)
+        {
+            //#3e
+            arr[j] = malloc(sizeof(char) * (i-start)+1);
+            //#3f
+            copyword(arr[j], &str[start], i-start);
+            j++;
+        }
+    }
+ //#3g
+    arr[j] = NULL;
+    
+    int x = 0;
+    while (arr[x] != NULL)
+    {
+        printf("word %d - %s\n", x, arr[x]);
+        x++;
+    }
+    return (arr);
+}
+
+
+int main()
+{
+    ft_split("  change this for different   tests   ");
+    return (0);
+}
+
+/* -- TO TEST IT'S WORKING 
+After arr[j] add this code - remove it before submitting
+It iterates through the array until NULL 
+- remember we set the last space as NULL in an array
+
+    int x = 0;
+    while (arr[x] != NULL)
+    {
+        printf("word %d - %s\n", x, arr[x]);
+        x++;
+    }
+
+Also you will need a main to call ft_split with your test string
+
+#include <stdio.h>
+
+int main()
+{
+    ft_split("  change this for different   tests   ");
+    return (0);
+}
+    
+*/

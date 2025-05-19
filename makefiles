@@ -1,19 +1,66 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ssukhija <ssukhija@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/04/24 10:55:50 by ssukhija          #+#    #+#              #
-#    Updated: 2025/04/24 11:39:56 by ssukhija         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+add this to libft
 
-.SILENT:
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_atoi_base.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ssukhija <ssukhija@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/19 11:11:45 by ssukhija          #+#    #+#             */
+/*   Updated: 2025/05/19 11:57:59 by ssukhija         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-NAME = libft.a
-INC = libft.h
+static int	changec(char c)
+{
+	if (c >= '0' && c <= '9')
+		return (c - 48);
+	else if (c >= 'a' && c <= 'z')
+		return (c - 'a' + 10);
+	else if (c >= 'A' && c <= 'Z')
+		return (c - 'A' + 10);
+	else
+		return (-1);
+	return (0);
+}
+
+int	ft_atoi_base(const char *str, int str_base)
+{
+	int	i;
+	int	sign;
+	int	result;
+
+	i = 0;
+	sign = 1;
+	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	result = 0;
+	while (str[i] != '\0')
+	{
+		if (changec(str[i]) == -1 || changec(str[i]) >= str_base)
+			break ;
+		result = result * str_base + changec(str[i]);
+		i++;
+	}
+	return (result * sign);
+}
+
+
+
+-----
+
+libft.h
+int		ft_atoi_base(const char *str, int str_base);
+
+------
+Makefile
 
 CFILES = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c\
 	 ft_strlen.c ft_memset.c ft_bzero.c ft_memcpy.c ft_memmove.c\
@@ -21,85 +68,357 @@ CFILES = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c\
 	 ft_strrchr.c ft_strncmp.c ft_memchr.c ft_memcmp.c ft_strnstr.c\
 	 ft_atoi.c ft_calloc.c ft_strdup.c ft_strjoin.c ft_strtrim.c\
 	 ft_itoa.c ft_split.c ft_strmapi.c ft_striteri.c ft_putchar_fd.c\
-	 ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_substr.c\
+	 ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_substr.c ft_atoi_base.c\
 	 ../get_next_line/get_next_line.c\
 	 ../get_next_line/get_next_line_utils.c
 
-BSFILES = ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c
 
-OFILES = $(CFILES:.c=.o)
-BSOBJ = $(BSFILES:.c=.o)
+-------------
 
-CC = cc
-CFLAGS = -Wall -Werror -Wextra
-
-all: $(NAME)
-
-%.o: %.c $(INC)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(NAME): $(OFILES)
-	ar rcs $(NAME) $(OFILES)
-
-bonus: $(OFILES) $(BSOBJ)
-	ar rcs $(NAME) $(OFILES) $(BSOBJ)
-
-clean:
-	rm -rf $(OFILES) $(BSOBJ)
-
-fclean: clean
-	rm -rf $(NAME)
-
-re: fclean all
-
-.PHONY: all clean fclean re bonus
+utils.c
 
 
+int	ft_atoi_base_wrapper(const char *str, int base)
+{
+	if (str == NULL)
+		return (0);
+	if (base == 16 && (str[0] == '0') && (str[1] == 'x' || str[1] == 'X'))
+		str += 2; // Skip "0x" or "0X"
+	return ft_atoi_base(str, base);
+}
+
+
+-----------
+fdf.c changes
+
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fdf.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ssukhija <ssukhija@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 22:46:27 by ssukhija          #+#    #+#             */
+/*   Updated: 2025/04/23 22:46:27 by ssukhija         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "fdf.h"
+
+void    read_map(t_fdf *map_info, char *str)
+{
+    char *line;
+    char *tmp_line;
+    int prev_width;
+    int width_error;
+    int fd;
+
+    prev_width = 0;
+    width_error = 0;
+    fd = open(str, O_RDONLY);
+    ft_printf("FD  ---- %d \n", fd);
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        tmp_line = ft_strtrim(line, "\n");
+        map_info->map_width = ft_wordcount(tmp_line, ' ');
+        if (map_info->map_height != 0)
+        {
+           if (map_info->map_width != prev_width)  // checking all widths are the same size
+                width_error = 1;
+        }
+        else
+            prev_width = map_info->map_width;
+        free(tmp_line);
+        free(line); // Free the line after each read
+        map_info->map_height++;
+    }
+    ft_printf("width errrr :%d\n", width_error); //rm
+    if (width_error == 1)
+    {
+        ft_printf("width errrr CLOSING:\n");
+        free(map_info);
+    }
+    close (fd);    
+}
+
+void    *split_line(char *line) //possible move to utils
+{
+    char *tmp_line;
+    char **res;
+
+    tmp_line = ft_strtrim(line, "\n");
+    res = ft_split(tmp_line, ' ');
+    return (res);
+}
+
+void    fill_dots(t_pixel *dot, char **arr, int row)
+{
+    char **z_arr;
+
+    int pos;
+    pos = 0;
+    while (arr[pos] != NULL)
+    {
+        dot[pos].x = pos;
+        dot[pos].y = row;
+        z_arr = ft_split(arr[pos], ',');
+        if (z_arr == NULL)
+            return ;
+        dot[pos].z = ft_atoi(z_arr[0]);
+        if (z_arr[1] != NULL)
+        {
+            ft_printf("Converting: %s\n", z_arr[1]);
+            dot[pos].colour = (unsigned int)ft_atoi_base_wrapper(z_arr[1], 16);
+            ft_printf("Parsed Colour: 0x%X\n", dot[pos].colour);
+
+//            dot[pos].colour = (unsigned int)ft_atoi_base_wrapper(z_arr[1], 16);
+            //ft_printf("z_arr[1] = %s, parsed color = 0x%X\n", z_arr[1], ft_atoi_base_wrapper(z_arr[1], 16));
+
+        }
+        else
+            dot[pos].colour = 0xFFFFFF;
+        ft_printf("FILL: pos=%d, x=%d, y=%d, z=%d, colour=0x%X\n", pos, dot[pos].x, dot[pos].y, dot[pos].z, dot[pos].colour);
+        pos++;
+        free_arr(z_arr);
+        // after split I'll need to free the arr that was split [0] and [1]
+
+//                dot[pos].z = ft_atoi(arr[pos]);
+        // int d = 0;
+        // while(z_arr[d] != NULL)
+        // {
+        //     ft_printf("%d - %s\n" , d, z_arr[d]);
+        //     d++;
+        // }
+        //ft split arr[pos] by "," dot[pos].z = arr[pos][0]
+        // dot[pos].colour = [1]
+        //         //ft_printf("pos = %d, x = %d, y = %d,  z = %d\n", pos, dot[pos].x, dot[pos].y, dot[pos].z);
+        
+    }
+}
+
+
+
+void    fill_matrix(t_fdf *map_info, char *str)
+{
+    char    *line;
+    char    **arr;
+    int     fd;
+    int row; //current height
+
+    row = 0;
+    fd = open(str, O_RDONLY);
+    map_info->matrix = malloc(sizeof(t_pixel *) * (map_info->map_height));
+    if(map_info->matrix == NULL)
+    {
+        ft_printf("file closed fd is %d\n", fd);
+        free(map_info);
+        close (fd);
+    }
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        arr = split_line(line);
+        map_info->matrix[row] = malloc(sizeof(t_pixel) * map_info->map_width);
+        if (map_info->matrix[row] == NULL)
+        {
+            ft_printf("Problem with Matrix Allocation.\n");
+            free_matrix(map_info, row);  // free each row from the matrix
+            free(map_info);
+            close (fd);
+        }
+        fill_dots(map_info->matrix[row], arr, row);
+        row++;
+        free(line);
+        free_arr(arr); // free each part of array
+    }
+    close (fd);
+}
+
+
+static void	position_map(t_pixel *curr_pos, t_pixel *next_pos)
+{
+	int	x_offset;
+	int	y_offset;
+
+	x_offset = WIDTH * 3 / 6;
+	y_offset = HEIGHT * 1 / 5;
+	curr_pos->x += x_offset;
+	curr_pos->y += y_offset;
+	next_pos->x += x_offset;
+	next_pos->y += y_offset;
+}
+
+static void isometric(t_pixel *pos)
+{
+    int	x_temp;
+    int	y_temp;
+
+    x_temp = pos->x;
+    y_temp = pos->y;
+    pos->x = (x_temp - y_temp) * cos(0.523599);
+    pos->y = (x_temp + y_temp) * sin(0.523599) - pos->z;
+}
+    
+
+static void	scale_up(t_fdf *map_info, t_pixel *curr_pos, t_pixel *next_pos)
+{
+	float	hypotenuse;
+	float	scale;
+
+	hypotenuse = sqrt(map_info->map_width * map_info->map_width + \
+	map_info->map_height * map_info->map_height);
+	scale = 0.85 * HEIGHT / hypotenuse;
+	curr_pos->x = round(curr_pos->x * scale);
+	curr_pos->y = round(curr_pos->y * scale);
+	next_pos->x = round(next_pos->x * scale);
+	next_pos->y = round(next_pos->y * scale);
+}
+
+static void	bresenham_algo(t_bresenham *dot, t_pixel *curr_pos, t_pixel *next_pos)
+{
+    dot->dx = abs(next_pos->x - curr_pos->x);
+    dot->dy = -1 * abs(next_pos->y - curr_pos->y);
+    if (curr_pos->x <= next_pos->x)
+        dot->sx = 1;
+    else
+        dot->sx = -1;
+    if (curr_pos->y <= next_pos->y)
+        dot->sy = 1;
+    else
+        dot->sy = -1;
+    dot->err = dot->dx + dot->dy;
+    dot->x0 = curr_pos->x;
+    dot->y0 = curr_pos->y;
+}
+    
+
+void draw_line(t_fdf *map_info, t_pixel *curr_pos, t_pixel *next_pos)
+{
+    t_bresenham	dot;
+
+    scale_up(map_info, curr_pos, next_pos);
+    isometric(curr_pos);
+    isometric(next_pos);
+    position_map(curr_pos, next_pos);
+    bresenham_algo(&dot, curr_pos, next_pos);
+    //0xff0000FF
+    printf("DRAW: curr color: 0x%X, next color: 0x%X\n", curr_pos->colour, next_pos->colour);
+
+    while (1)
+	{
+		if (dot.x0 < WIDTH && dot.x0 > 0 && dot.y0 < HEIGHT && dot.y0 > 0)
+            mlx_put_pixel(map_info->image, dot.x0, dot.y0, curr_pos->colour);
+		if (dot.x0 == next_pos->x && dot.y0 == next_pos->y)
+			break ;
+		if (2 * dot.err >= dot.dy && dot.x0 != next_pos->x)
+		{
+			dot.err += dot.dy;
+			dot.x0 += dot.sx;
+		}
+		if (2 * dot.err <= dot.dx && dot.y0 != next_pos->y)
+		{
+			dot.err += dot.dx;
+			dot.y0 += dot.sy;
+		}
+	}
+}
+
+
+// prep h - iter through x for each line and get cood and next coods 
+void    prep_h(t_fdf *map_info, int x, int y)
+{
+    t_pixel curr_pos;
+    t_pixel next_pos;
+
+    curr_pos.x = map_info->matrix[y][x].x;
+    curr_pos.y = map_info->matrix[y][x].y;
+    curr_pos.z = map_info->matrix[y][x].z;
+ //   ft_printf("c x:%d y:%d z:%d\n", curr_pos.x, curr_pos.y, curr_pos.z);
+    next_pos.x = map_info->matrix[y][x + 1].x;
+    next_pos.y = map_info->matrix[y][x + 1].y;
+    next_pos.z = map_info->matrix[y][x + 1].z;
+ //   ft_printf("nxt c x:%d y:%d z:%d\n", next_pos.x, next_pos.y, next_pos.z);
+    draw_line(map_info, &curr_pos, &next_pos);
+    
+}
+
+void    prep_v(t_fdf *map_info, int x, int y)
+{
+    t_pixel curr_pos;
+    t_pixel next_pos;
+
+    curr_pos.x = map_info->matrix[y][x].x;
+    curr_pos.y = map_info->matrix[y][x].y;
+    curr_pos.z = map_info->matrix[y][x].z;
+    next_pos.x = map_info->matrix[y + 1][x].x;
+    next_pos.y = map_info->matrix[y + 1][x].y;
+    next_pos.z = map_info->matrix[y + 1][x].z;
+    draw_line(map_info, &curr_pos, &next_pos);    
+}
 
 
 
 
+void    open_display(t_fdf *map_info)
+{
+    void    *mlx_conn;
+    //mlx_image_t*    image;
+    int x;
+    int y;
 
+    x = 0;
+    y = 0;
+    mlx_conn = mlx_init(WIDTH, HEIGHT, "fdf", true);
+    if (mlx_conn == NULL)
+        return ;
+    map_info->image = mlx_new_image(mlx_conn, WIDTH, HEIGHT);
+    // up to here, return image and draw on it
+    
+    while (y < map_info->map_height)
+    {
+        x = 0;
+        while (x < map_info->map_width)
+        {   
+            if (x < map_info->map_width - 1)
+            {
+                prep_h(map_info, x, y);
+            }
+            if (y < map_info->map_height -1)
+            {
+                prep_v(map_info, x, y);
+            }
+            x++;
+        }
+        y++;
+    }
+    mlx_image_to_window(mlx_conn, map_info->image, 0, 0);
+    mlx_loop(mlx_conn);
+    mlx_terminate(mlx_conn);
+    
+}
 
+int main(int argc, char **argv)
+{
+    t_fdf *map_info;
 
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ssukhija <ssukhija@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/04/24 11:51:17 by ssukhija          #+#    #+#              #
-#    Updated: 2025/04/24 11:51:20 by ssukhija         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+    //error check the file for -1 and number of args should be 2
+    if (argc != 2)
+        ft_printf("error with args\n");
+ //   fd = open(argv[1], O_RDONLY);
+    map_info = (t_fdf *)malloc(sizeof(t_fdf));
+    if (map_info == NULL)
+    {
+        free(map_info);
+        return (1);
+    }
+    map_info->map_width = 0;
+    map_info->map_height = 0;
+    read_map(map_info, argv[1]);
+    fill_matrix(map_info, argv[1]);
+    open_display(map_info);
+    
+    free(map_info);
+    return (0);
+}
 
-NAME = libftprintf.a
-INC = ft_printf.h
-
-CFILES = ft_printf.c ft_putchar.c ft_putstr.c ft_putnbr.c\
-	 ft_lowhex.c ft_putptr.c ft_putunit.c ft_uphex.c
-
-OFILES = $(CFILES:.c=.o)
-
-CC = cc
-CFLAGS = -Wall -Werror -Wextra
-
-all: $(NAME)
-
-%.o: %.c $(INC)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(NAME): $(OFILES)
-	ar rcs $(NAME) $(OFILES)
-
-clean:
-	rm -f $(OFILES)
-
-fclean: clean
-	rm -f $(NAME)
-
-re: fclean all
-
-.PHONY: all clean fclean re bonus
 

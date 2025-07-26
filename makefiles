@@ -1,2 +1,0 @@
-valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --show-reachable=yes ./fdf maps/10-70.fdf 2> valgrind.log
-grep -A20 "definitely lost" valgrind.log | grep -E '[^/]+\.c'

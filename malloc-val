@@ -1,0 +1,15 @@
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --show-reachable=yes ./fdf maps/10-70.fdf 2> valgrind.log
+grep -A20 "definitely lost" valgrind.log | grep -E '[^/]+\.c'
+
+
+for testing malloc
+void *xmalloc(size_t size)
+{
+    static int count = 0;
+    count++;
+
+    if (count == 1) // simulate failure on the 1st call
+        return NULL;
+
+    return malloc(size);
+}

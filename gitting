@@ -1,0 +1,44 @@
+git stuff
+Test connection:
+
+ssh -T git@github.com
+
+
+You should see a success message.
+
+2. Initialize Git in your directory
+
+Go to the folder you want to upload:
+
+cd /path/to/your/project
+git init
+
+3. Add a remote repository
+
+Create a new repo on GitHub (without README, .gitignore, or license, to avoid merge conflicts).
+
+Then link your local repo to GitHub:
+
+git remote add origin git@github.com:USERNAME/REPOSITORY.git
+
+4. Add all files and folders
+git add .
+
+
+(. means everything in this folder and below.)
+
+5. Commit your changes
+git commit -m "Initial commit"
+
+6. Push to GitHub
+
+If it’s a brand new repo:
+
+git branch -M main
+git push -u origin main
+
+
+If you’re pushing to an existing repo with commits already, you may need:
+
+git pull origin main --rebase   # sync first
+git push origin main

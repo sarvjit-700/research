@@ -1,3 +1,14 @@
+if repo exisits
+ssh -T git@github.com
+cd /path/to/your/project
+git init
+git add .
+git commit -m "Initial commit"
+git pull origin main --rebase   # sync first
+git push origin main
+
+
+** FULL **
 git stuff
 Test connection:
 

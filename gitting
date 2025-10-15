@@ -1,3 +1,101 @@
+🔁 Step-by-Step Instructions:
+1. Check your current branch and status
+git status
+
+✅ What you should see:
+
+You're on the correct branch (main)
+
+Modified files listed as "modified" or "untracked"
+
+Nothing scary like "You are in the middle of a rebase"
+
+2. Add the changes you want to push
+git add .
+
+
+Or specify individual files:
+
+git add file1.c file2.c
+
+3. Commit your changes
+git commit -m "Describe what you did"
+
+✅ What to expect:
+
+You’ll see something like:
+
+[main abc1234] Describe what you did
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+4. Pull first to sync with GitHub
+
+Always pull before pushing, just in case someone (even you from another device) made changes on GitHub:
+
+git pull --rebase
+
+✅ What to expect:
+
+If no changes on GitHub → it says "Already up to date."
+
+If changes exist → Git replays your commits on top (rebase)
+
+If there's a conflict → Git tells you and waits for you to fix it
+
+Fix conflicts, then run:
+
+git add <file>
+git rebase --continue
+
+5. Push to GitHub
+
+Once your local branch is clean and up to date:
+
+git push origin main
+
+✅ What to expect:
+Enumerating objects: ...
+Counting objects: ...
+Writing objects: ...
+To github.com:<your-username>/<your-repo>.git
+
+🚨 Common Issues & How to Fix
+🔄 "Your branch is behind 'origin/main'"
+
+Run: git pull --rebase
+
+Then push normally
+
+⚔️ Merge/Rebase Conflicts
+
+If during a pull or rebase Git says:
+
+CONFLICT (content): Merge conflict in file.c
+
+
+Open the file, resolve conflict markers (<<<<<<<, =======, >>>>>>>)
+
+Then:
+
+git add file.c
+git rebase --continue
+
+🔁 "Updates were rejected because the remote contains work..."
+
+This means history has changed on GitHub and you’re trying to push conflicting changes.
+
+Fix:
+git pull --rebase
+# resolve conflicts if any
+git push origin main
+
+
+Or if you’re sure your version should replace GitHub’s:
+
+git push origin main --force-with-lease
+******************
+
+
 if repo exisits
 ssh -T git@github.com
 cd /path/to/your/project

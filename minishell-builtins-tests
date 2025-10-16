@@ -1,0 +1,86 @@
+tests for EXPORT
+✅ 1. Basic Key-Value Export
+export VAR1=hello
+export VAR2=world
+export VAR3=123
+
+✅ Expect:
+declare -x VAR1="hello"
+declare -x VAR2="world"
+declare -x VAR3="123"
+
+✅ 2. Export Without Value
+export EMPTY
+export NOVALUE=
+
+
+✅ Expect:
+declare -x EMPTY
+declare -x NOVALUE=""
+
+✅ 3. Overwriting Existing Variables
+export VAR1=first
+export VAR1=second
+
+
+✅ Expect only the final value:
+declare -x VAR1="second"
+
+✅ 4. Invalid Identifiers
+export 1VAR=bad
+export VAR@NAME=bad
+export =oops
+export =
+
+
+✅ Expect errors like:
+minishell: export: '1VAR=bad': not a valid identifier
+
+
+🚫 Nothing should be added to the env.
+
+✅ 5. Export Multiple in One Line
+export VARX=1 VARY=2 VARZ=3
+
+
+✅ Expect all to show:
+declare -x VARX="1"
+declare -x VARY="2"
+declare -x VARZ="3"
+
+✅ 6. Re-exporting Existing Variable
+export VAR1
+
+✅ Should not duplicate the entry or break.
+
+✅ 7. Confirm Sorting Order (Optional)
+
+If your shell sorts the output (like Bash does):
+
+export ZZZ=1 AAA=2 MMM=3
+export
+
+
+✅ Expect sorted output:
+declare -x AAA="2"
+declare -x MMM="3"
+declare -x ZZZ="1"
+
+
+🔁 If you're not sorting, make sure you document that behavior.
+
+✅ 8. Value With Spaces
+export QUOTE="a b c"
+
+
+✅ Output:
+declare -x QUOTE="a b c"
+
+✅ 9. Edge: Export with + (Not Required for Now)
+
+Bash supports this:
+
+export VAR+=more
+
+
+You can skip this unless doing full POSIX behavior.

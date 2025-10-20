@@ -1,3 +1,10 @@
+git status
+git add .
+git commit -m "Describe what you did"
+git pull --rebase
+git push origin main
+
+
 🔁 Step-by-Step Instructions:
 1. Check your current branch and status
 git status

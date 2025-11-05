@@ -1,3 +1,31 @@
+MALLOC TESTER FOR PIPELINE IN MINISHELL
+///////////////////////////////
+static int malloc_fail_at = 3;  // set to the Nth call you want to fail
+static int malloc_count = 0;
+
+void *test_malloc(size_t size) {
+    malloc_count++;
+    if (malloc_fail_at > 0 && malloc_count == malloc_fail_at) {
+        return NULL;
+    }
+    return malloc(size);
+}
+
+static int fork_fail_at = -1;  // set to the Nth call you want to fail
+static int fork_count = 0;
+
+pid_t test_fork(void) {
+    fork_count++;
+    if (fork_fail_at > 0 && fork_count == fork_fail_at) {
+        return -1;  // simulate fork failure
+    }
+    return fork();
+}
+////////////////////////////////////////////////////////////////////////
+
+
+
+FDF
 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --show-reachable=yes ./fdf maps/10-70.fdf 2> valgrind.log
 grep -A20 "definitely lost" valgrind.log | grep -E '[^/]+\.c'
 

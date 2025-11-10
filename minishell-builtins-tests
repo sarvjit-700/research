@@ -1,3 +1,31 @@
+incase i need it - from minishell in pipe_utils.c
+
+void	child_process(t_pipe_data *data, t_cmd *cmd, char **envp)
+{
+	//int	tty_fd;
+
+	signal(SIGINT, SIG_DFL);
+    signal(SIGQUIT, SIG_DFL);
+	if (data->i > 0)
+		dup2(data->pipes[data->i - 1][0], STDIN_FILENO);
+	if (data->i < data->cmd_count - 1)
+		dup2(data->pipes[data->i][1], STDOUT_FILENO);
+	// if (data->i < data->cmd_count - 1)
+	// {
+	// 	tty_fd = open("/dev/tty", O_WRONLY);
+	// 	if (tty_fd >= 0)
+	// 	{
+	// 		dup2(tty_fd, STDERR_FILENO);
+	// 		close(tty_fd);
+	// 	}
+	// }
+	exec_child(data, cmd, envp);
+}
+
+
+
+
+
 tests for EXPORT
 ✅ 1. Basic Key-Value Export
 export VAR1=hello

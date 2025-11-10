@@ -1,3 +1,19 @@
+
+| Test String           | Expected Expansion            | Notes                                     |
+| --------------------- | ----------------------------- | ----------------------------------------- |
+| `"NoVarsHere"`        | `"NoVarsHere"`                | Nothing to expand                         |
+| `"$HOME"`             | `"/home/user"`                | Basic env variable                        |
+| `"Start$PATHEnd"`     | `"Start/usr/binEnd"`          | Variable in middle of text                |
+| `"Mix$HOMEText$PATH"` | `"Mix/home/userText/usr/bin"` | Multiple variables                        |
+| `"'$HOME'"`           | `"$HOME"`                     | Single quotes prevent expansion           |
+| `"Esc$UNKNOWN"`       | `"Esc"`                       | Missing variable replaced by empty string |
+| `"LastStatus:$?"`     | `"LastStatus:42"`             | `$?` expansion                            |
+
+
+
+
+
+
 minishell test tokenizer
 #include <stdio.h>
 #include <stdlib.h>

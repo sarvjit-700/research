@@ -1,4 +1,4 @@
-
+EXPANSION TEST
 | Test String           | Expected Expansion            | Notes                                     |
 | --------------------- | ----------------------------- | ----------------------------------------- |
 | `"NoVarsHere"`        | `"NoVarsHere"`                | Nothing to expand                         |
@@ -10,8 +10,49 @@
 | `"LastStatus:$?"`     | `"LastStatus:42"`             | `$?` expansion                            |
 
 
+HEREDOC TESTS
 
+minishell$ cat << EOF
+> hello
+> world
+> EOF
+hello
+world
 
+minishell$ cat << EOF
+> ^C
+
+minishell$ cat << A << B
+> first
+> A
+> second
+> B
+second
+
+minishell$ cat << EOF | wc
+> hello
+> EOF
+      1       1       6
+
+minishell$ cat << EOF | wc
+> ^C
+
+minishell$ echo $?
+130
+
+minishell$ cat << "EOF"
+> $USER
+> hello
+> EOF
+$USER
+hello
+
+minishell$ grep hi < STOP
+STOP: No such file or directory
+minishell$ grep hi << STOP
+> hi
+> STOP
+hi
 
 
 minishell test tokenizer

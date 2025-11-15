@@ -54,7 +54,14 @@ minishell$ grep hi << STOP
 > STOP
 hi
 
+minishell$ cat << END > out.txt
+> line1
+> line2
+> END
 
+
+
+----------------------------------------
 minishell test tokenizer
 #include <stdio.h>
 #include <stdlib.h>

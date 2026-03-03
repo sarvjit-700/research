@@ -1,3 +1,13 @@
+ADD SUBMODULE MLX42:
+
+git submodule add https://github.com/codam-coding-college/MLX42.git
+add to git
+to use after download:
+git submodule update --init --recursive
+cd MLX42
+cmake -B build
+cmake --build build
+
 git status
 git add .
 git commit -m "Describe what you did"

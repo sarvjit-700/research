@@ -1,0 +1,320 @@
+# ***** VECT2 ******
+
+
+
+#include "vect2.hpp"
+
+vect2::vect2(): x(0), y(0) {}
+
+vect2::vect2(int num1, int num2)
+{
+    this->x = num1;
+    this->y = num2;
+}
+
+vect2::vect2(const vect2& source)
+{
+    *this = source;
+}
+
+vect2& vect2::operator=(const vect2& source)
+{
+    if (this != &source)
+    {
+        this->x = source.x;
+        this->y = source.y;
+    }
+    return *this;
+}
+
+int vect2::operator[](int index) const
+{
+    if (index == 0)
+        return (this->x);
+    return(this->y);
+}
+int& vect2::operator[](int index)
+{
+    if (index == 0)
+        return (this->x);
+    return(this->y);
+} // NON-COST
+
+vect2 vect2::operator-() const
+{
+    return vect2(-this->x, -this->y);
+}
+
+vect2 vect2::operator*(int num) const
+{
+    return vect2(this->x * num, this->y * num);        
+}
+
+vect2& vect2::operator*=(int num)
+{
+    *this = *this * num;
+    return (*this);        
+}
+
+vect2& vect2::operator+=(const vect2& obj)
+{
+    *this = *this + obj;
+    return (*this);    
+}
+
+vect2& vect2::operator-=(const vect2& obj)
+{
+    *this = *this - obj;
+    return (*this);    
+}
+
+vect2& vect2::operator*=(const vect2& obj)
+{
+    *this = *this * obj;
+    return (*this);    
+}
+
+vect2 vect2::operator+(const vect2& obj) const
+{
+    return vect2(this->x + obj.x, this->y + obj.y);    
+}
+
+vect2 vect2::operator-(const vect2& obj) const
+{
+    return vect2(this->x - obj.x, this->y - obj.y);    
+}
+
+vect2 vect2::operator*(const vect2& obj) const
+{
+    return vect2(this->x * obj.x, this->y * obj.y);
+}
+
+vect2& vect2::operator++()
+{
+    this->x++;
+    this->y++;
+    return *this;
+}
+vect2 vect2::operator++(int)
+{
+    vect2 tmp(*this);
+    this->x++;
+    this->y++;
+    return tmp;
+}
+vect2& vect2::operator--()
+{
+    this->x--;
+    this->y--;
+    return *this;
+}
+vect2 vect2::operator--(int)
+{
+    vect2 tmp(*this);
+    this->x--;
+    this->y--;
+    return tmp;
+}
+
+bool vect2::operator==(const vect2& obj) const
+{
+    return (this->x == obj.x && this->y == obj.y);
+}
+
+bool vect2::operator!=(const vect2& obj) const
+{
+    return !(*this == obj);
+}
+
+vect2::~vect2() {}
+
+vect2 operator*(int num, const vect2& obj)
+{
+    return (obj * num);
+}
+
+std::ostream& operator<<(std::ostream& os,const vect2& obj)
+{
+    os << "{" << obj[0] << ", " << obj[1] << "}";
+    return os;
+}
+
+
+----------------------------------------------------------
+# **** BIGINT ****
+#include "bigint.hpp"
+#include <algorithm>
+
+bigint::bigint() : str("0") {}
+
+bigint::bigint(unsigned int num)
+{
+    std::stringstream ss;
+    ss << num;
+    this->str = ss.str();
+}
+
+bigint::bigint(const bigint& source)
+{
+    *this = source;
+}
+
+std::string bigint::getStr()const
+{
+    return (this->str);
+}
+
+bigint& bigint::operator=(const bigint& source)
+{
+    if (*this != source)
+    {
+        this->str = source.str;
+    }
+    return *this;
+}
+
+// addition
+bigint bigint::operator+(const bigint& other)const
+{
+    std::string s1 = this->str;
+    std::string s2 = other.str;
+    std::string result = "";
+
+    int i = s1.length() -1;
+    int j = s2.length() -1;
+    int carry = 0;
+
+    while (i >= 0 || j >= 0 || carry > 0)
+    {
+        int sum = carry;
+        if (i >= 0)
+            sum += s1[i--] - '0';
+        if (j >= 0)
+            sum += s2[j--] - '0';
+        carry = sum /10;
+        result += (char)((sum %10) + '0');
+    }
+
+    std::reverse(result.begin(), result.end());
+    bigint tmp(*this);
+    tmp.str = result;
+    return (tmp);
+}
+
+bigint& bigint::operator+=(const bigint& other)
+{
+    *this = *this + other;
+    return (*this);
+}
+
+// increments
+bigint& bigint::operator++()
+{
+    *this = *this + bigint(1);
+    return (*this);
+} // ++x
+bigint bigint::operator++(int)
+{
+    bigint tmp(*this);
+    *this = *this + bigint(1);
+    return (tmp);
+} // x++
+
+// shift with num
+bigint bigint::operator<<(unsigned int n)const
+{
+    if (this->str == "0" || n == 0)
+        return *this;
+    bigint tmp(*this);
+    tmp.str.insert(tmp.str.end(), n, '0');
+    return (tmp);
+}
+
+bigint bigint::operator>>(unsigned int n)const
+{
+    bigint tmp(*this);
+    size_t len = tmp.str.length();
+    if (n >= len)
+        tmp.str = "0";
+    else
+        tmp.str.erase(tmp.str.length() -n, n);
+    return (tmp);
+}
+
+bigint& bigint::operator<<=(unsigned int n)
+{
+    *this = *this << n;
+    return *this;
+}
+
+bigint& bigint::operator>>=(unsigned int n)
+{
+    *this = *this >> n;
+    return *this;
+}
+
+//shift with object
+bigint bigint::operator<<(const bigint& other)const
+{
+    unsigned int shift = (unsigned int)std::atoi(other.getStr().c_str()); 
+    return *this << shift;
+}
+bigint bigint::operator>>(const bigint& other)const
+{
+    unsigned int shift = (unsigned int)std::atoi(other.getStr().c_str());
+    return *this >> shift;
+}
+
+bigint& bigint::operator<<=(const bigint& other)
+{
+    *this = *this << other;
+    return (*this);
+}
+bigint& bigint::operator>>=(const bigint& other)
+{
+    *this = *this >> other;
+    return (*this);
+}
+
+// ==, !=, <, >, <=, >=
+bool bigint::operator==(const bigint& other) const
+{
+    return (this->str == other.str);
+}
+
+bool bigint::operator!=(const bigint& other) const
+{
+    return !(*this == other);
+}
+
+bool bigint::operator<(const bigint& other) const //check
+{
+    if (this->str.length() != other.str.length())
+        return (this->str.length() < other.str.length());
+    return (this->str < other.str);
+}
+
+bool bigint::operator>(const bigint& other) const
+{
+    return !(*this < other) && !(*this == other);
+}
+
+bool bigint::operator<=(const bigint& other) const
+{
+    return !(*this > other);
+}
+bool bigint::operator>=(const bigint& other) const
+{
+    return !(*this < other);
+}
+
+bigint::~bigint()
+{}
+
+
+std::ostream& operator<<(std::ostream& output, const bigint& obj)
+{
+    output << obj.getStr();
+    return output;
+}
+

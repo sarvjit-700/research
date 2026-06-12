@@ -2,6 +2,18 @@
 # Remove this line from the /.resources/level1/vect2/tester.sh 
 # # read -rp "Press enter to continue..." dummy
 
+##There are 7 CONST simple functions
+## 8 OTHERs
+## 2 INTs[] 
+## 2 functions outside the class
+#And the usual OCF
+
+## HINTS ##
+# bool + const : no *this
+# vect2 + const : return *this
+# vect2 & : return tmp or vect2
+# when you return tmp you need vect2 tmp(*this) first.
+
 
 #include "vect2.hpp"
 

@@ -13,6 +13,8 @@
 # vect2 + const : return *this
 # vect2 & : return tmp or vect2
 # when you return tmp you need vect2 tmp(*this) first.
+# simple operators (*,-,+, neg, bools) use const
+# use & with (+=, *=, -=, ++, --)
 
 
 #include "vect2.hpp"
@@ -53,7 +55,7 @@ int& vect2::operator[](int index)
     return(this->y);
 } // NON-COST
 
-vect2 vect2::operator-() const
+vect2 vect2::operator-() const //neg
 {
     return vect2(-this->x, -this->y);
 }
@@ -459,3 +461,228 @@ int main (int ac, char **av)
     free(nxt);
     return (0);
 }
+
+
+****************************** BSQ ****************************
+************ bsq.h *******************************
+#ifndef BSQ_H
+#define BSQ_H
+
+#include <unistd.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <stdio.h>
+
+typedef struct s_map {
+    char *data;
+    int width;
+    int height;
+    char empty;
+    char obstacle;
+    char full;
+} t_map;
+
+void solve_bsq(int fd);
+
+#endif
+
+
+************* bsq.c ******************************
+
+#include "bsq.h"
+
+// Dynamically grows a buffer to read the entire map file descriptor into memory
+static char *read_all(int fd)
+{
+    int cap = 4096;
+    int len = 0;
+    char *buf = malloc(cap);
+    if (!buf)
+        return (NULL);
+    
+    int n;
+    char c;
+    while ((n = read(fd, &c, 1)) > 0)
+    {
+        if (len >= cap - 1)
+        {
+            cap *= 2;
+            char *new_buf = malloc(cap);
+            if (!new_buf)
+            {
+                free(buf);
+                return (NULL);
+            }
+            for (int i = 0; i < len; i++)
+                new_buf[i] = buf[i];
+            free(buf);
+            buf = new_buf;
+        }
+        buf[len++] = c;
+    }
+    buf[len] = '\0';
+    return (buf);
+}
+
+// Parses the configuration header (e.g., "9.ox\n") and determines width/height
+static int parse_map(char *raw, t_map *map)
+{
+    int i = 0;
+    while (raw[i] && raw[i] != '\n')
+        i++;
+    if (i < 4)
+        return (0);
+    
+    map->full = raw[i - 1];
+    map->obstacle = raw[i - 2];
+    map->empty = raw[i - 3];
+    
+    int h = 0;
+    for (int j = 0; j < i - 3; j++)
+    {
+        if (raw[j] < '0' || raw[j] > '9')
+            return (0);
+        h = h * 10 + (raw[j] - '0');
+    }
+    map->height = h;
+    if (h <= 0)
+        return (0);
+        
+    map->data = &raw[i + 1];
+    
+    int w = 0;
+    while (map->data[w] && map->data[w] != '\n')
+        w++;
+    if (w == 0)
+        return (0);
+    map->width = w;
+    
+    return (1);
+}
+
+// Executes the Dynamic Programming analysis and draws the biggest square
+static int find_and_draw(t_map *map)
+{
+    int w = map->width;
+    int h = map->height;
+    int *prev_row = malloc(w * sizeof(int));
+    int *curr_row = malloc(w * sizeof(int));
+    if (!prev_row || !curr_row)
+        return (0);
+        
+    for (int i = 0; i < w; i++)
+        prev_row[i] = curr_row[i] = 0;
+        
+    int max_size = 0, max_x = 0, max_y = 0;
+    
+    for (int y = 0; y < h; y++)
+    {
+        // Guard checking if line length matches structural expectations
+        if (map->data[y * (w + 1) + w] != '\n')
+        {
+            free(prev_row); free(curr_row);
+            return (0);
+        }
+        for (int x = 0; x < w; x++)
+        {
+            char cell = map->data[y * (w + 1) + x];
+            if (cell == map->obstacle)
+            {
+                curr_row[x] = 0;
+            }
+            else if (cell == map->empty)
+            {
+                if (y == 0 || x == 0)
+                {
+                    curr_row[x] = 1;
+                }
+                else
+                {
+                    int min = prev_row[x]; // Top
+                    if (curr_row[x - 1] < min) min = curr_row[x - 1]; // Left
+                    if (prev_row[x - 1] < min) min = prev_row[x - 1]; // Top-Left
+                    curr_row[x] = min + 1;
+                }
+                
+                if (curr_row[x] > max_size)
+                {
+                    max_size = curr_row[x];
+                    max_x = x;
+                    max_y = y;
+                }
+            }
+            else
+            {
+                free(prev_row); free(curr_row);
+                return (0); // Malformed character encounter
+            }
+        }
+        for (int i = 0; i < w; i++)
+            prev_row[i] = curr_row[i];
+    }
+    free(prev_row);
+    free(curr_row);
+    
+    // Draw the winning square working backwards from bottom-right corner
+    if (max_size > 0)
+    {
+        for (int y = max_y - max_size + 1; y <= max_y; y++)
+        {
+            for (int x = max_x - max_size + 1; x <= max_x; x++)
+            {
+                map->data[y * (w + 1) + x] = map->full;
+            }
+        }
+    }
+    write(1, map->data, h * (w + 1));
+    return (1);
+}
+
+void solve_bsq(int fd)
+{
+    char *raw = read_all(fd);
+    if (!raw)
+    {
+        write(2, "map error\n", 10);
+        return;
+    }
+    
+    t_map map;
+    if (!parse_map(raw, &map) || !find_and_draw(&map))
+    {
+        write(2, "map error\n", 10);
+    }
+    free(raw);
+}
+
+**********************main *****************************
+#include "bsq.h"
+
+
+int main(int ac, char **av)
+{
+    if (ac == 1)
+    {
+        // Read directly from Standard Input (e.g. cat map | ./a.out)
+        solve_bsq(0);
+    }
+    else
+    {
+        // Loop through multiple file targets arguments sequentially
+        for (int i = 1; i < ac; i++)
+        {
+            int fd = open(av[i], O_RDONLY);
+            if (fd < 0)
+            {
+                write(2, "map error\n", 10);
+            }
+            else
+            {
+                solve_bsq(fd);
+                close(fd);
+            }
+        }
+    }
+    return (0);
+}
+

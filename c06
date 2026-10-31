@@ -1,0 +1,366 @@
+
+#include "ScalarConverter.hpp"
+
+static void apply_precision(double value)
+{
+    double dummy;
+    if (std::modf(value, &dummy) == 0.0)
+        std::cout << std::fixed << std::setprecision(1);
+    else
+        std::cout << std::setprecision(6);
+}
+
+e_type check_type(const std::string &literal)
+{
+	if (literal.empty())
+        return WRONG_TYPE;
+		
+	std::string pseudo_literals[] = {"-inff", "+inff", "nanf", "-inf", "+inf", "nan"};
+    for (int i = 0; i < 6; i++) {
+        if (literal == pseudo_literals[i])
+            return EXCEPTION;
+    }
+    if (literal.length() == 1 && !isdigit(literal[0]))
+        return CHAR;
+    char *endptr = NULL;
+    errno = 0;
+	strtod(literal.c_str(), &endptr);
+	if (endptr != literal.c_str())
+    {
+        if (*endptr == '\0' && literal.find('.') != std::string::npos)
+            return DOUBLE;
+        else if (*endptr == 'f' && *(endptr + 1) == '\0' && literal.find('.') != std::string::npos)
+            return FLOAT;
+    }
+    errno = 0;
+    endptr = NULL;
+    strtol(literal.c_str(), &endptr, 10);
+    if (*endptr == '\0' && endptr != literal.c_str())
+    {
+        if (errno == ERANGE)
+            return DOUBLE;
+        return INT;
+    }
+    return WRONG_TYPE;
+}
+
+void print_exception(const std::string &literal)
+{
+    std::cout << "char: impossible" << std::endl;
+    std::cout << "int: impossible" << std::endl;
+
+    if (literal == "nan" || literal == "nanf")
+    {
+        std::cout << "float: nanf" << std::endl;
+        std::cout << "double: nan" << std::endl;
+    }
+    else if (literal == "+inf" || literal == "+inff")
+    {
+        std::cout << "float: +inff" << std::endl;
+        std::cout << "double: +inf" << std::endl;
+    }
+    else if (literal == "-inf" || literal == "-inff")
+    {
+        std::cout << "float: -inff" << std::endl;
+        std::cout << "double: -inf" << std::endl;
+    }
+}
+
+void print_char(char value)
+{
+	if (!std::isprint(static_cast<char>(value)))
+		std::cout << "char: Non-printable" << std::endl;
+	else
+		std::cout << "char: '" << value << "'" << std::endl;
+	std::cout << "int: " << static_cast<int>(value) << std::endl;
+	std::cout << std::fixed << std::setprecision(1);
+	std::cout << "float: " << static_cast<float>(value) << "f" << std::endl;
+	std::cout << "double: " << static_cast<double>(value) << std::endl;
+}
+
+void print_integer(long value)
+{
+	if (value > INT_MAX || value < INT_MIN)
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: overflows" << std::endl;
+	}
+	else
+	{
+		if (value < 0 || value > 127)
+			std::cout << "char: impossible" << std::endl;
+		else if (!std::isprint(value))
+			std::cout << "char: Non-printable" << std::endl;
+		else
+			std::cout << "char: '" << static_cast<char>(value) << "'" << std::endl;
+		std::cout << "int: " << static_cast<int>(value) << std::endl;
+	}
+	apply_precision(value);
+	std::cout << "float: " << static_cast<float>(value) << "f" << std::endl;
+	std::cout << "double: " << static_cast<double>(value) << std::endl;
+}
+
+void print_float(float value)
+{	
+	if (value < 0 || value > 127)
+		std::cout << "char: impossible" << std::endl;
+	else if (!std::isprint(static_cast<char>(value)))
+		std::cout << "char: Non-printable" << std::endl;
+	else
+		std::cout << "char: '" << static_cast<char>(value) << "'" << std::endl;
+	if (static_cast<long>(value) > INT_MAX || static_cast<long>(value) < INT_MIN)
+		std::cout << "int: overflows" << std::endl;
+	else
+		std::cout << "int: " << static_cast<int>(value) << std::endl;
+	apply_precision(value);
+	std::cout << "float: " << value << "f" << std::endl;
+	std::cout << "double: " << static_cast<double>(value) << std::endl;
+}
+
+void print_double(double value)
+{	
+	if (value < 0 || value > 127)
+		std::cout << "char: impossible" << std::endl;
+	else if (!std::isprint(static_cast<char>(value)))
+		std::cout << "char: Non-printable" << std::endl;
+	else
+		std::cout << "char: '" << static_cast<char>(value) << "'" << std::endl;
+	if (static_cast<long>(value) > INT_MAX || static_cast<long>(value) < INT_MIN)
+		std::cout << "int: overflows" << std::endl;
+	else
+		std::cout << "int: " << static_cast<int>(value) << std::endl;
+	apply_precision(value);
+	std::cout << "float: " << static_cast<float>(value) << "f" << std::endl;
+	std::cout << "double: " << value << std::endl;
+}
+
+
+-------------------------------------------------------------------------
+  include "ScalarConverter.hpp"
+
+static std::string trim_whitespace(const std::string &literal)
+{
+	if (literal.length() == 1)
+		return literal;
+    size_t start = literal.find_first_not_of(" \t\n\r\f\v");
+	std::string s; 
+    if (start == std::string::npos) 
+        return "";
+    size_t end = literal.find_last_not_of(" \t\n\r\f\v"); 
+    s = literal.substr(start, end - start + 1);
+	return s;
+}
+
+void ScalarConverter::convert(const std::string &literal)
+{
+	std::string normalized = trim_whitespace(literal);
+	e_type var = check_type(normalized);
+	char *endptr = NULL;
+	switch (var)
+	{
+		case (EXCEPTION):
+		{
+			print_exception(normalized);
+			break;
+		}
+		case (INT):
+		{
+			long value = strtol(normalized.c_str(), &endptr, 10);
+			print_integer(value);
+			break;
+		}
+		case (CHAR):
+		{
+			char value = normalized[0];
+			print_char(value);
+			break;
+		}
+		case (FLOAT):
+		{
+			float value = static_cast<float>(strtod(normalized.c_str(), &endptr));
+			print_float(value);
+			break;
+		}
+		case (DOUBLE):
+		{
+			double value = strtod(normalized.c_str(), &endptr);
+			print_double(value);
+			break;
+		}
+		case (WRONG_TYPE):
+			std::cout << "Please provide allowed literal" << std::endl;
+			break;
+		default:
+			break;
+	}
+}
+
+----------------------------------------------------------------------------
+
+  #ifndef SCALAR_CONVERTER_HPP
+#define SCALAR_CONVERTER_HPP
+
+#include <iostream>
+#include <iomanip>
+#include <cctype>
+#include <cstdlib>
+#include <string>
+#include <climits>
+#include <cerrno>
+#include <cmath>
+
+enum e_type
+{
+	EXCEPTION = 0,
+	INT = 1,
+	DOUBLE = 2,
+	CHAR = 3,
+	FLOAT = 4,
+	WRONG_TYPE = -1
+};
+
+class ScalarConverter
+{
+	private:
+		ScalarConverter();
+		ScalarConverter(ScalarConverter const &other);
+		ScalarConverter &operator=(ScalarConverter const &other);
+		~ScalarConverter();
+	public:
+		static void convert(const std::string &value);
+};
+
+e_type check_type(const std::string &literal);
+void print_exception(const std::string &literal);
+void print_char(char value);
+void print_integer(long value);
+void print_float(float value);
+void print_double(double value);
+
+
+#endif
+
+--------------------------------------
+  --------------------------------------
+  --------------------------------------
+
+  #include "Data.hpp"
+#include "Serializer.hpp"
+
+int main()
+{
+	Data test(42, "Bibr bobr");
+	Data *pointer = &test;
+	
+	std::cout << "\e[33m BEFORE CHANGES: \e[0m" << std::endl;
+	std::cout << "Pointer address: " << pointer << std::endl;
+	std::cout << "Pointer's values: " << std::endl;
+	std::cout << "Name: " << pointer->name << "\n" << "Number: " << pointer->number << std::endl;
+
+	uintptr_t raw = Serializer::serialize(pointer);
+	
+	std::cout << "\e[31m CONVERSION TO uintptr_t: \e[0m" << std::endl;
+	std::cout << raw << std::endl;
+	std::cout << "hex value is: 0x" << std::hex << raw << std::dec << std::endl;
+	
+	Data *deserialized_ptr = Serializer::deserialize(raw);
+	
+	std::cout << "\e[32m BACK TO NORMAL POINTER \e[0m" << std::endl;
+	std::cout << "pointer address: " << deserialized_ptr << std::endl;
+	std::cout << "pointer name: " << deserialized_ptr->name << std::endl;
+	std::cout << "pointer number: " << deserialized_ptr->number << std::endl;
+	
+	if (pointer == deserialized_ptr)
+		std::cout << "\e[33m Pointers match \e[0m" << std::endl;
+	else
+		std::cout << "Pointers do not match..." << std::endl;
+
+	return 0;
+}
+
+--------------------------------------------------
+main.cpp
+
+#include "Base.hpp"
+#include "A.hpp"
+#include "B.hpp"
+#include "C.hpp"
+#include <ctime>
+#include <cstdlib>
+
+Base* generate(void);
+void identify(Base* p);
+void identify(Base& p);
+
+int main()
+{
+	std::srand(static_cast<unsigned int>(time(NULL)));
+	
+	std::cout << "\e[33mTesting Random Generation and Identification\e[0m" << std::endl;
+
+    for (int i = 0; i < 5; ++i) {
+        std::cout << "\nTest " << (i + 1) << ":" << std::endl;
+        Base* randomObject = generate();
+        std::cout << "Identify by pointer:   ";
+        identify(randomObject);
+        std::cout << "Identify by reference: ";
+        identify(*randomObject);
+        delete randomObject;
+    }
+
+    return 0;
+}
+
+-----------------
+idendify.cpp
+  
+#include "Base.hpp"
+#include "A.hpp"
+#include "B.hpp"
+#include "C.hpp"
+#include <exception>
+
+void identify(Base* p)
+{
+	if (dynamic_cast<A*>(p))
+		std::cout << "Our type is A" << std::endl;
+	else if (dynamic_cast<B*>(p))
+		std::cout << "Our type is B" << std::endl;
+	else if (dynamic_cast<C*>(p))
+		std::cout << "Our type is C" << std::endl;
+	else
+		std::cout << "It should not had happened, but every cast returned NULL, therefore it's an unknown type" << std::endl;
+}
+
+void identify(Base &p)
+{
+	try
+	{
+		static_cast<void>(dynamic_cast<A&>(p));
+		std::cout << "Our type is A" << std::endl;
+		return;
+	}
+	catch(const std::exception&)
+	{}
+
+	try 
+	{
+		(void)dynamic_cast<B&>(p);
+		std::cout << "Our type is B" << std::endl;
+		return;
+	}
+	catch(const std::exception&){}
+
+	try
+	{
+		(void)dynamic_cast<C&>(p);
+		std::cout << "Our type is C" << std::endl;
+		return;
+	}
+	catch(const std::exception&){}
+
+	std::cout << "It should not had happened, but every cast resulted in error, therefore it's an unknown type";
+	
+}
+
+------------------------------

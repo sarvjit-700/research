@@ -364,3 +364,71 @@ void identify(Base &p)
 }
 
 ------------------------------
+EVAL:
+ok now write an evaluation on this project CPP06 using this eval sheet
+
+### Exercise 00: Conversion of scalar types
+
+*This exercise is about using the static\_cast.*
+
+#### Makefile
+
+There is a Makefile that compiles using the appropriate flags.
+If this is not the case, the evaluation of this exercise stops here. you can move on to the next exercise.
+
+#### Scalar conversion
+
+Did the student create a class with a private constructor, and static
+methods ?
+Did the student use the static\_cast to convert values?
+Accept the use of implicit casts for promotion casts only.
+Does the program work as required?
+
+Anyway, please don't be too uncompromising towards the exercise's outputs
+if the spirit of the exercise is respected.
+Even if this exercise is wrong, continue the evaluation process.
+
+---
+
+### Exercise 01: Serialization
+
+*This exercise is about using the reinterpret\_cast.*
+
+#### Makefile
+
+There is a Makefile that compiles using the appropriate flags.
+If this is not the case, the evaluation of this exercise stops here. you can move on to the next exercise.
+
+#### Retyping of raw data
+
+Does the program work as required?
+Did the student create a class with a private constructor, and static
+methods ?
+The reinterpret\_cast<> should be used twice:
+
+- First from data\* to uintptr\_t.
+- Then, from uintptr\_t to data\*.
+
+And the resulting data struct should be usable.
+
+---
+
+### Exercise 02: Identify real type
+
+*This exercise is about using the dynamic\_cast.*
+
+#### Makefile
+
+There is a Makefile that compiles using the appropriate flags.
+If this is not the case, the evaluation of this exercise stops here. you can move on to the next exercise.
+
+#### Real type identification
+
+Does the program work as required?
+Check the code. Did the student use the dynamic\_cast to identify the real
+type?
+void identify(Base\* p) should check if the cast return is NULL.
+void identify(Base& p) should use a try and catch block to check if the cast failed.
+
+(In case you're wondering, the header \<typeinfo> must not appear
+anywhere.)

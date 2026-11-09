@@ -4,3 +4,18 @@ Go to .ssh and create a new key
 ssh-keygen -t rsa -b 4096 -C "ssukhija@student.42prague.com"
 rename file to id_rsa_pub
 open file with text editor copy all and paste in intra
+
+
+create for home to GITHUB
+
+SSH relies on cryptographic keys instead of tokens. It is highly recommended for long-term development because it never requires you to manage or rotate passwords.
+
+Generate a new SSH key: Run the following command in your terminal, replacing the email with the one associated with your GitHub account. Press Enter at all the prompts to accept the default file location and leave the passphrase empty.ssh-keygen -t ed25519 -C "your_email@example.com"
+
+Copy your public key: Output the key to your terminal and copy the entire string (it will start with ssh-ed25519).cat ~/.ssh/id_ed25519.pub
+
+Add the key to GitHub: Go to GitHub in your browser, click your profile picture, and select Settings. Select SSH and GPG keys from the left sidebar, and click New SSH key. Give it a descriptive title (e.g., "Linux Workstation") and paste the key into the main text box, then click Add SSH key.
+
+Switch your CPP06 repository to use SSH: Navigate into your CPP06 folder in the terminal and update the remote URL to point to the SSH address instead of HTTPS.git remote set-url origin git@github.com:sarvjit-700/CPP06.git
+
+Test the connection: Run your git push or git pull. If it asks if you want to continue connecting (authenticity of host), type yes and press Enter.Verification: The push or pull will complete automatically without asking for a username or password.

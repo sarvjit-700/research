@@ -25,6 +25,15 @@ fit. Instead of letting the number overflow and turn into a corrupted value, we 
 The concept doesn't exist: Decimal types like float and double have special labels for "Infinity" (inf) and "Not a Number" (nan). Whole-number
 types like int and char simply don't have a way to write "Infinity"—there is no whole number for it, so converting it is impossible.
 
+3. Why a non-instantiable (private constructor) class is useful
+In C++, when you normally create a class, you use it to build objects that hold their own personal data (for example, two Bureaucrat objects
+where one is named "Bob" with grade 5, and another is named "Alice" with grade 120).
+
+Sometimes, however, you don't need objects that remember data—you just want a toolbox of helper functions grouped together under a clean name.
+
+Making the constructor private prevents anyone from creating useless empty objects in memory, forcing them to just reach directly into the
+toolbox using ClassName::function().
+
 
 ----------------
 

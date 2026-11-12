@@ -1,9 +1,12 @@
 1. Why static_cast was used (in simple terms)
-Think of data types like different languages—for example, int (whole numbers) and float (decimal numbers) store numbers completely differently inside the computer's memory.
+Think of data types like different languages—for example, int (whole numbers) and float (decimal numbers) store numbers completely differently
+inside the computer's memory.
 
-If you just copy the raw 1s and 0s from a float directly into an int without translating them, you get total garbage. static_cast acts like a translator: it looks at the actual math value of the float (say, 42.7), drops the decimal, and writes 42 in the proper int format.
+If you just copy the raw 1s and 0s from a float directly into an int without translating them, you get total garbage. static_cast acts like a
+translator: it looks at the actual math value of the float (say, 42.7), drops the decimal, and writes 42 in the proper int format.
 
-It also acts as a safety guard when you compile your code. If you accidentally try to translate two types that have no logical relationship (like turning a number into a pointer to a Bureaucrat), static_cast stops you with a compiler error before your program can ever run and crash.
+It also acts as a safety guard when you compile your code. If you accidentally try to translate two types that have no logical relationship
+(like turning a number into a pointer to a Bureaucrat), static_cast stops you with a compiler error before your program can ever run and crash.
 
 2. Why impossible happens (in simple terms)
 Every data type is like a box of a different size:
@@ -16,9 +19,11 @@ A double is a massive box (holds huge numbers and decimals).
 
 impossible happens for two simple reasons:
 
-The box is too small: If you have the number 500 in a double box and try to shove it into a tiny char box (which maxes out at 127), it won't fit. Instead of letting the number overflow and turn into a corrupted value, we say it is impossible.
+The box is too small: If you have the number 500 in a double box and try to shove it into a tiny char box (which maxes out at 127), it won't
+fit. Instead of letting the number overflow and turn into a corrupted value, we say it is impossible.
 
-The concept doesn't exist: Decimal types like float and double have special labels for "Infinity" (inf) and "Not a Number" (nan). Whole-number types like int and char simply don't have a way to write "Infinity"—there is no whole number for it, so converting it is impossible.
+The concept doesn't exist: Decimal types like float and double have special labels for "Infinity" (inf) and "Not a Number" (nan). Whole-number
+types like int and char simply don't have a way to write "Infinity"—there is no whole number for it, so converting it is impossible.
 
 
 ----------------

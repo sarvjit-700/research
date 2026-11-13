@@ -1,3 +1,6 @@
+
+STATIC_ CAST
+
 1. Why static_cast was used (in simple terms)
 Think of data types like different languages—for example, int (whole numbers) and float (decimal numbers) store numbers completely differently
 inside the computer's memory.
@@ -34,7 +37,22 @@ Sometimes, however, you don't need objects that remember data—you just want a 
 Making the constructor private prevents anyone from creating useless empty objects in memory, forcing them to just reach directly into the
 toolbox using ClassName::function().
 
+REINTERPRET_CAST:
+Why couldn't we use static_cast here? Because C++ forbids static_cast from converting a pointer (Data*) directly into an integer (uintptr_t)—
+they are fundamentally unrelated concepts, so only reinterpret_cast can force the compiler to treat an address as an integer.
 
+Why use uintptr_t instead of unsigned int or unsigned long? 
+Because uintptr_t is specifically designed to hold a pointer without losing bits across both 32-bit
+and 64-bit architectures.
+
+Did deserialize create a copy of Data? 
+No. Both &myData and recoveredData hold the exact same memory address, so
+modifying recoveredData->number directly changes myData.number.   
+
+
+DYNAMIC_CAST:
+
+dynamic_cast reads that hidden tag at runtime to verify the object's true identity. Without a virtual function in Base, no vtable exists, so dynamic_cast has nothing to inspect.
 ----------------
 
 #include "ScalarConverter.hpp"
